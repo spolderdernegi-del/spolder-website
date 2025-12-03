@@ -1,31 +1,32 @@
 import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 const slides = [
   {
     id: 1,
-    title: "Türk Sporunda Yeni Bir Dönem Başlıyor",
-    description: "SPOlDER, spor politikalarının geliştirilmesi için yenilikçi projeler sunuyor. Birlikte daha güçlü bir spor ekosistemi oluşturuyoruz.",
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&auto=format&fit=crop&q=80",
-    date: "15 Aralık 2024",
-    category: "Duyuru",
+    title: "Spor Ekonomisi Raporu 2024 Yayınlandı",
+    description: "Türkiye'nin spor ekonomisine ilişkin kapsamlı raporumuz kamuoyuyla paylaşıldı. Raporda spor sektörünün GSYH'ye katkısı analiz edildi.",
+    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&auto=format&fit=crop&q=80",
+    date: "12 Aralık 2024",
+    category: "Araştırma",
   },
   {
     id: 2,
-    title: "Uluslararası Spor Konferansı 2024",
-    description: "Avrupa'nın önde gelen spor politikası uzmanlarıyla bir araya geldiğimiz konferansımızın detaylarını keşfedin.",
-    image: "https://images.unsplash.com/photo-1540575467063-178a50c2df87?w=1200&auto=format&fit=crop&q=80",
-    date: "20 Aralık 2024",
+    title: "Yerel Yönetimler ve Spor Forumu Gerçekleşti",
+    description: "Belediyelerin spor politikalarını ele aldığımız forum büyük ilgi gördü. 50'den fazla belediye temsilcisi katıldı.",
+    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&auto=format&fit=crop&q=80",
+    date: "8 Aralık 2024",
     category: "Etkinlik",
   },
   {
     id: 3,
-    title: "Spor ve Toplum Araştırması Yayınlandı",
-    description: "Türkiye'nin spor alışkanlıklarını inceleyen kapsamlı araştırmamızın sonuçları açıklandı.",
-    image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&auto=format&fit=crop&q=80",
-    date: "10 Aralık 2024",
-    category: "Haber",
+    title: "Avrupa Spor Şartı Türkçe'ye Çevrildi",
+    description: "Avrupa Konseyi'nin yeni Spor Şartı'nın Türkçe çevirisi derneğimiz tarafından tamamlandı.",
+    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&auto=format&fit=crop&q=80",
+    date: "5 Aralık 2024",
+    category: "Yayın",
   },
 ];
 
@@ -86,12 +87,16 @@ const HeroSlider = () => {
 
           {/* CTA */}
           <div className="flex gap-4 pt-4">
-            <Button variant="hero" size="lg">
-              Devamını Oku
-            </Button>
-            <Button variant="outline" size="lg" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
-              Tüm Haberler
-            </Button>
+            <Link to={`/haber/${slides[currentSlide].id}`}>
+              <Button variant="hero" size="lg">
+                Devamını Oku
+              </Button>
+            </Link>
+            <Link to="/haberler">
+              <Button variant="outline" size="lg" className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10">
+                Tüm Haberler
+              </Button>
+            </Link>
           </div>
         </div>
       </div>

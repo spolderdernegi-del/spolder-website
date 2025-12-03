@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { Users, ArrowRight } from "lucide-react";
 
 const CTASection = () => {
@@ -26,17 +27,21 @@ const CTASection = () => {
 
           {/* CTA Buttons */}
           <div className="flex flex-col sm:flex-row gap-4 justify-center pt-6">
-            <Button variant="hero" size="xl" className="group">
-              Hemen Üye Ol
-              <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
-            </Button>
-            <Button
-              variant="outline"
-              size="xl"
-              className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50"
-            >
-              Daha Fazla Bilgi
-            </Button>
+            <Link to="/iletisim">
+              <Button variant="hero" size="xl" className="group">
+                Hemen Üye Ol
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
+              </Button>
+            </Link>
+            <Link to="/hakkimizda">
+              <Button
+                variant="outline"
+                size="xl"
+                className="border-primary-foreground/30 text-primary-foreground hover:bg-primary-foreground/10 hover:border-primary-foreground/50"
+              >
+                Daha Fazla Bilgi
+              </Button>
+            </Link>
           </div>
 
           {/* Stats */}

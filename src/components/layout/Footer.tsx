@@ -39,16 +39,31 @@ const Footer = () => {
           <div>
             <h4 className="font-display font-bold text-lg mb-6">Hızlı Linkler</h4>
             <ul className="space-y-3">
-              {["Hakkımızda", "Haberler", "Etkinlikler", "Projeler", "İletişim"].map((item) => (
-                <li key={item}>
-                  <Link
-                    to={`/${item.toLowerCase().replace("ı", "i").replace("ş", "s")}`}
-                    className="text-sm text-primary-foreground/80 hover:text-primary transition-colors"
-                  >
-                    {item}
-                  </Link>
-                </li>
-              ))}
+              <li>
+                <Link to="/hakkimizda" className="text-sm text-primary-foreground/80 hover:text-primary transition-colors">
+                  Hakkımızda
+                </Link>
+              </li>
+              <li>
+                <Link to="/haberler" className="text-sm text-primary-foreground/80 hover:text-primary transition-colors">
+                  Haberler
+                </Link>
+              </li>
+              <li>
+                <Link to="/etkinlikler" className="text-sm text-primary-foreground/80 hover:text-primary transition-colors">
+                  Etkinlikler
+                </Link>
+              </li>
+              <li>
+                <Link to="/projeler" className="text-sm text-primary-foreground/80 hover:text-primary transition-colors">
+                  Projeler
+                </Link>
+              </li>
+              <li>
+                <Link to="/iletisim" className="text-sm text-primary-foreground/80 hover:text-primary transition-colors">
+                  İletişim
+                </Link>
+              </li>
             </ul>
           </div>
 

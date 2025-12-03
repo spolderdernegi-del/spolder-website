@@ -1,4 +1,5 @@
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle } from "lucide-react";
 
 const features = [
@@ -70,10 +71,12 @@ const AboutSection = () => {
 
             {/* CTA */}
             <div className="pt-4">
-              <Button variant="gradient" size="lg" className="group">
-                Daha Fazla Bilgi
-                <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
-              </Button>
+              <Link to="/hakkimizda">
+                <Button variant="gradient" size="lg" className="group">
+                  Daha Fazla Bilgi
+                  <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
+                </Button>
+              </Link>
             </div>
           </div>
         </div>

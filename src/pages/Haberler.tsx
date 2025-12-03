@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Calendar, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const newsItems = [
   {
@@ -76,7 +77,11 @@ const Haberler = () => {
           <div className="container-custom mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {newsItems.map((item) => (
-                <article key={item.id} className="bg-card rounded-lg overflow-hidden shadow-card card-hover">
+                <Link
+                  to={`/haber/${item.id}`}
+                  key={item.id}
+                  className="bg-card rounded-lg overflow-hidden shadow-card card-hover block"
+                >
                   <div className="relative h-52">
                     <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
                     <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
@@ -84,7 +89,7 @@ const Haberler = () => {
                     </span>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-display font-bold text-lg text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors cursor-pointer">
+                    <h3 className="font-display font-bold text-lg text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
@@ -95,19 +100,21 @@ const Haberler = () => {
                         <Calendar className="w-4 h-4" />
                         <span>{item.date}</span>
                       </div>
-                      <Button variant="ghost" size="sm" className="text-primary">
-                        Devamı <ArrowRight className="w-4 h-4 ml-1" />
+                      <Button size="sm" className="text-white bg-foreground hover:bg-foreground/80">
+                        Devamı
                       </Button>
                     </div>
                   </div>
-                </article>
+                </Link>
               ))}
             </div>
 
             <div className="text-center mt-12">
-              <Button variant="outline" size="lg">
-                Daha Fazla Haber Yükle
-              </Button>
+              <Link to="/haberler">
+                <Button variant="outline" size="lg">
+                  Daha Fazla Haber Yükle
+                </Button>
+              </Link>
             </div>
           </div>
         </section>

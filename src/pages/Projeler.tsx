@@ -2,6 +2,7 @@ import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Link } from "react-router-dom";
 
 const projects = [
   {
@@ -93,14 +94,18 @@ const Projeler = () => {
                     </span>
                   </div>
                   <div className="p-6">
-                    <h3 className="font-display font-bold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
-                      {project.title}
-                    </h3>
+                    <Link to={`/proje/${project.id}`}>
+                      <h3 className="font-display font-bold text-lg text-foreground mb-2 group-hover:text-primary transition-colors">
+                        {project.title}
+                      </h3>
+                    </Link>
                     <p className="text-muted-foreground text-sm mb-4 line-clamp-3">
                       {project.description}
                     </p>
                     <Button variant="ghost" size="sm" className="text-primary p-0 h-auto">
-                      Detaylar <ArrowRight className="w-4 h-4 ml-1" />
+                      <Link to={`/proje/${project.id}`} className="flex items-center">
+                        Detaylar <ArrowRight className="w-4 h-4 ml-1" />
+                      </Link>
                     </Button>
                   </div>
                 </article>

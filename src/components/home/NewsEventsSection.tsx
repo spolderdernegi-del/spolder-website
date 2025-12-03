@@ -84,31 +84,35 @@ const NewsEventsSection = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               {news.map((item) => (
-                <article key={item.id} className="bg-card rounded-lg overflow-hidden shadow-card card-hover">
-                  <div className="relative h-48">
-                    <img
-                      src={item.image}
-                      alt={item.title}
-                      className="w-full h-full object-cover"
-                    />
-                    <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-                      {item.category}
-                    </span>
-                  </div>
-                  <div className="p-6">
-                    <h3 className="font-display font-bold text-lg text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors cursor-pointer">
-                      {item.title}
-                    </h3>
-                    <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
-                      {item.excerpt}
-                    </p>
-                    <div className="flex items-center gap-2 text-muted-foreground text-sm">
-                      <Calendar className="w-4 h-4" />
-                      <span>{item.date}</span>
+                  <Link
+                    to={`/haber/${item.id}`}
+                    key={item.id}
+                    className="bg-card rounded-lg overflow-hidden shadow-card card-hover block"
+                  >
+                    <div className="relative h-48">
+                      <img
+                        src={item.image}
+                        alt={item.title}
+                        className="w-full h-full object-cover"
+                      />
+                      <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
+                        {item.category}
+                      </span>
                     </div>
-                  </div>
-                </article>
-              ))}
+                    <div className="p-6">
+                      <h3 className="font-display font-bold text-lg text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
+                        {item.title}
+                      </h3>
+                      <p className="text-muted-foreground text-sm mb-4 line-clamp-2">
+                        {item.excerpt}
+                      </p>
+                      <div className="flex items-center gap-2 text-muted-foreground text-sm">
+                        <Calendar className="w-4 h-4" />
+                        <span>{item.date}</span>
+                      </div>
+                    </div>
+                  </Link>
+                ))}
             </div>
           </div>
 
@@ -138,8 +142,8 @@ const NewsEventsSection = () => {
                       <span className="text-xs uppercase">{event.month}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <h4 className="font-semibold text-foreground text-sm line-clamp-2 hover:text-primary transition-colors cursor-pointer">
-                        {event.title}
+                      <h4 className="font-semibold text-foreground text-sm line-clamp-2 hover:text-primary transition-colors">
+                        <Link to="/etkinlikler">{event.title}</Link>
                       </h4>
                       <p className="text-muted-foreground text-xs mt-1">
                         📍 {event.location}
@@ -169,7 +173,7 @@ const NewsEventsSection = () => {
                     <Bell className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-medium text-foreground text-sm hover:text-primary transition-colors">
-                        {item.title}
+                        <Link to="/yayinlar">{item.title}</Link>
                       </h4>
                       <p className="text-muted-foreground text-xs mt-1">{item.date}</p>
                     </div>

@@ -46,22 +46,20 @@ const Header = () => {
   const handleSearch = (e: React.FormEvent) => {
     e.preventDefault();
     if (searchQuery.trim()) {
-      // TODO: Implement search functionality
-      console.log("Searching for:", searchQuery);
+      // Navigate to search page with query parameter
+      window.location.href = `/search?q=${encodeURIComponent(searchQuery)}`;
     }
   };
 
-  // Determine if we're on the homepage and not scrolled (dark header)
-  const isDarkHeader = location.pathname === "/" && !isScrolled;
+  // Determine if dark header: not scrolled anywhere = dark, scrolled = light
+  const isDarkHeader = !isScrolled;
 
   return (
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
           ? "bg-background/95 backdrop-blur-md shadow-header"
-          : location.pathname === "/"
-          ? "bg-anthracite/80 backdrop-blur-sm"
-          : "bg-anthracite/5 backdrop-blur-sm"
+          : "bg-anthracite/80 backdrop-blur-sm"
       }`}
     >
       <div className="container-custom mx-auto px-4 md:px-8">
@@ -69,22 +67,10 @@ const Header = () => {
           {/* Logo - Dynamic based on header state */}
           <Link to="/" className="flex items-center gap-3">
             <img 
-              src={isDarkHeader ? logoDark : logoLight} 
+              src={isScrolled ? logoDark : logoLight}
               alt="SPOlDER Logo" 
               className="h-12 w-auto transition-opacity duration-300" 
             />
-            <div className="hidden sm:block">
-              <span className={`font-display font-bold text-lg transition-colors duration-300 ${
-                isDarkHeader ? "text-white" : "text-foreground"
-              }`}>
-                SPOlDER
-              </span>
-              <p className={`text-xs transition-colors duration-300 ${
-                isDarkHeader ? "text-white/70" : "text-muted-foreground"
-              }`}>
-                Spor Politikaları Derneği
-              </p>
-            </div>
           </Link>
 
           {/* Desktop Navigation */}

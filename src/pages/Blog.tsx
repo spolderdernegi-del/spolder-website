@@ -9,7 +9,7 @@ const blogPosts = [
     id: 1,
     title: "Spor Politikalarında Yeni Yaklaşımlar",
     excerpt: "Modern spor politikalarının toplum üzerindeki etkilerini ve gelecek vizyonunu ele alan kapsamlı bir analiz.",
-    image: "https://images.unsplash.com/photo-1461896836934- voices-of-youth?w=600&h=400&fit=crop",
+    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=400&fit=crop",
     author: "Dr. Ahmet Yılmaz",
     date: "28 Kasım 2024",
     category: "Analiz",
@@ -90,7 +90,7 @@ const Blog = () => {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="p-8 flex flex-col justify-center">
+                <div className="p-8 flex flex-col justify-center">
                 <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm font-medium rounded-full mb-4 w-fit">
                   {blogPosts[0].category}
                 </span>
@@ -110,10 +110,12 @@ const Blog = () => {
                     {blogPosts[0].date}
                   </span>
                 </div>
-                <Button variant="gradient" className="w-fit">
-                  Devamını Oku
-                  <ArrowRight className="w-4 h-4 ml-2" />
-                </Button>
+                <Link to={`/blog/${blogPosts[0].id}`}>
+                  <Button variant="gradient" className="w-fit">
+                    Devamını Oku
+                    <ArrowRight className="w-4 h-4 ml-2" />
+                  </Button>
+                </Link>
               </div>
             </div>
           </div>
@@ -125,9 +127,10 @@ const Blog = () => {
         <div className="container-custom mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {blogPosts.slice(1).map((post) => (
-              <article
+              <Link
+                to={`/blog/${post.id}`}
                 key={post.id}
-                className="group bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300"
+                className="group block bg-card rounded-2xl overflow-hidden shadow-card hover:shadow-card-hover transition-all duration-300"
               >
                 <div className="aspect-video overflow-hidden">
                   <img
@@ -157,7 +160,7 @@ const Blog = () => {
                     </span>
                   </div>
                 </div>
-              </article>
+              </Link>
             ))}
           </div>
         </div>
