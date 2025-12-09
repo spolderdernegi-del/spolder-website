@@ -16,7 +16,7 @@ const Search = () => {
           item.title.toLowerCase().includes(query) ||
           item.excerpt.toLowerCase().includes(query) ||
           item.content.toLowerCase().includes(query) ||
-          item.author.toLowerCase().includes(query)
+          item.category.toLowerCase().includes(query)
       )
     : [];
 

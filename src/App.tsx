@@ -20,6 +20,17 @@ import Gizlilik from "./pages/Gizlilik";
 import KVKK from "./pages/KVKK";
 import NotFound from "./pages/NotFound";
 import ScrollToTop from "@/lib/ScrollToTop";
+import AdminLogin from "./pages/admin/Login";
+import AdminDashboard from "./pages/admin/Dashboard";
+import AdminEvents from "./pages/admin/Events";
+import AdminMediaLibrary from "./pages/admin/MediaLibrary";
+import AdminNews from "./pages/admin/News";
+import AdminProjects from "./pages/admin/Projects";
+import AdminFiles from "./pages/admin/Files";
+import AdminCategories from "./pages/admin/Categories";
+import AdminBlog from "./pages/admin/Blog";
+import AdminWelcomeModal from "./pages/admin/WelcomeModal";
+import AdminSettings from "./pages/admin/Settings";
 
 const queryClient = new QueryClient();
 
@@ -46,6 +57,17 @@ const App = () => (
           <Route path="/search" element={<Search />} />
           <Route path="/gizlilik" element={<Gizlilik />} />
           <Route path="/kvkk" element={<KVKK />} />
+          <Route path="/admin/login" element={<AdminLogin />} />
+          <Route path="/admin" element={<AdminDashboard />} />
+          <Route path="/admin/events" element={<AdminEvents />} />
+          <Route path="/admin/news" element={<AdminNews />} />
+          <Route path="/admin/projects" element={<AdminProjects />} />
+          <Route path="/admin/files" element={<AdminFiles />} />
+          <Route path="/admin/categories" element={<AdminCategories />} />
+          <Route path="/admin/blog" element={<AdminBlog />} />
+          <Route path="/admin/welcome-modal" element={<AdminWelcomeModal />} />
+          <Route path="/admin/settings" element={<AdminSettings />} />
+          <Route path="/admin/media" element={<AdminMediaLibrary />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
         {/* WhatsApp Floating Button */}
