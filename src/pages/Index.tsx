@@ -10,6 +10,14 @@ import { Button } from "@/components/ui/button";
 
 const Index = () => {
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
+  const [modalContent, setModalContent] = useState({
+    title: "Hoş Geldiniz!",
+    description: "SPOLDER Spor Politikaları Derneği'ne hoş geldiniz. Türkiye'de spor politikalarının geliştirilmesi için çalışıyoruz.",
+    feature1: "500+ üye ile spor camiasının güçlü sesi",
+    feature2: "Araştırmalar, etkinlikler ve politika önerileri",
+    feature3: "15+ yıllık deneyim ve uzmanlık",
+    buttonText: "Keşfetmeye Başla",
+  });
 
   useEffect(() => {
     // Check if user has visited before
@@ -17,6 +25,12 @@ const Index = () => {
     if (!hasVisited) {
       setShowWelcomeModal(true);
       localStorage.setItem("hasVisitedSpolder", "true");
+    }
+    
+    // Load modal content from localStorage
+    const stored = localStorage.getItem('spolder_welcome_modal');
+    if (stored) {
+      setModalContent(JSON.parse(stored));
     }
   }, []);
 
@@ -49,10 +63,10 @@ const Index = () => {
                   </svg>
                 </div>
                 <h2 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
-                  Hoş Geldiniz!
+                  {modalContent.title}
                 </h2>
                 <p className="text-sm md:text-base text-muted-foreground">
-                  SPOLDER Spor Politikaları Derneği'ne hoş geldiniz. Türkiye'de spor politikalarının geliştirilmesi için çalışıyoruz.
+                  {modalContent.description}
                 </p>
               </div>
               
@@ -63,7 +77,7 @@ const Index = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-foreground/80">500+ üye ile spor camiasının güçlü sesi</p>
+                  <p className="text-foreground/80">{modalContent.feature1}</p>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -71,7 +85,7 @@ const Index = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-foreground/80">Araştırmalar, etkinlikler ve politika önerileri</p>
+                  <p className="text-foreground/80">{modalContent.feature2}</p>
                 </div>
                 <div className="flex items-start gap-3 text-sm">
                   <div className="w-5 h-5 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-0.5">
@@ -79,7 +93,7 @@ const Index = () => {
                       <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
                     </svg>
                   </div>
-                  <p className="text-foreground/80">15+ yıllık deneyim ve uzmanlık</p>
+                  <p className="text-foreground/80">{modalContent.feature3}</p>
                 </div>
               </div>
 
@@ -87,7 +101,7 @@ const Index = () => {
                 onClick={closeWelcomeModal}
                 className="w-full bg-primary hover:bg-primary/90 text-primary-foreground font-semibold py-6"
               >
-                Keşfetmeye Başla
+                {modalContent.buttonText}
               </Button>
             </div>
           </div>
