@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
-import { Calendar, FileText, Briefcase, Download, LogOut, Users, Tag, BookOpen, MessageSquare, Settings, Image } from "lucide-react";
+import { Calendar, FileText, Briefcase, Download, LogOut, Users, Tag, BookOpen, MessageSquare, Settings, Image, UserCircle } from "lucide-react";
 
 const AdminDashboard = () => {
   const navigate = useNavigate();
@@ -122,6 +122,13 @@ const AdminDashboard = () => {
       icon: Image,
       href: "/admin/media",
       color: "bg-teal-500",
+    },
+    {
+      title: "Yönetim Kurulu",
+      description: "Yönetim kurulu üyelerini düzenle",
+      icon: UserCircle,
+      href: "/admin/board",
+      color: "bg-amber-500",
     },
     {
       title: "Hoş Geldiniz Pop-up",
