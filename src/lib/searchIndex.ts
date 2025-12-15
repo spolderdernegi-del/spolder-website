@@ -237,17 +237,70 @@ export const allContent = [
   },
 ];
 
-// Arama fonksiyonu
+// Arama fonksiyonu - Önce başlık, sonra içerik
 export function searchContent(query: string) {
   const q = query.toLowerCase().trim();
   if (!q) return [];
 
-  return allContent.filter(
-    (item) =>
-      item.title.toLowerCase().includes(q) ||
-      item.excerpt.toLowerCase().includes(q) ||
-      item.content.toLowerCase().includes(q) ||
-      item.category.toLowerCase().includes(q) ||
-      item.author.toLowerCase().includes(q)
+  // Önce başlıkta ara
+  const titleResults = allContent.filter((item) => 
+    item.title.toLowerCase().includes(q)
   );
+
+  // Eğer başlıkta sonuç varsa, sadece onları döndür (sıralanmış)
+  if (titleResults.length > 0) {
+    return titleResults.sort((a, b) => {
+      const aTitleLower = a.title.toLowerCase();
+      const bTitleLower = b.title.toLowerCase();
+      
+      // Tam eşleşme en üstte
+      if (aTitleLower === q && bTitleLower !== q) return -1;
+      if (bTitleLower === q && aTitleLower !== q) return 1;
+      
+      // Başlangıç eşleşmesi
+      const aStarts = aTitleLower.startsWith(q);
+      const bStarts = bTitleLower.startsWith(q);
+      if (aStarts && !bStarts) return -1;
+      if (bStarts && !aStarts) return 1;
+      
+      // Kelime başlangıcı eşleşmesi
+      const aWords = aTitleLower.split(/\s+/);
+      const bWords = bTitleLower.split(/\s+/);
+      const aWordMatch = aWords.some(word => word.startsWith(q));
+      const bWordMatch = bWords.some(word => word.startsWith(q));
+      if (aWordMatch && !bWordMatch) return -1;
+      if (bWordMatch && !aWordMatch) return 1;
+      
+      return 0;
+    });
+  }
+
+  // Başlıkta sonuç yoksa, içerikte ara (excerpt, content, category, author)
+  const contentResults = allContent.filter((item) => {
+    const excerptLower = item.excerpt.toLowerCase();
+    const contentLower = item.content.toLowerCase();
+    const categoryLower = item.category.toLowerCase();
+    const authorLower = item.author.toLowerCase();
+    
+    return excerptLower.includes(q) ||
+           contentLower.includes(q) ||
+           categoryLower.includes(q) ||
+           authorLower.includes(q);
+  });
+
+  // İçerik sonuçlarını sırala
+  return contentResults.sort((a, b) => {
+    let scoreA = 0;
+    let scoreB = 0;
+    
+    // Excerpt'te varsa daha yüksek puan
+    if (a.excerpt.toLowerCase().includes(q)) scoreA += 10;
+    if (b.excerpt.toLowerCase().includes(q)) scoreB += 10;
+    
+    // Category'de varsa
+    if (a.category.toLowerCase().includes(q)) scoreA += 5;
+    if (b.category.toLowerCase().includes(q)) scoreB += 5;
+    
+    return scoreB - scoreA;
+  });
 }

@@ -13,6 +13,8 @@ interface Project {
   category: string;
   status: string;
   start_date: string;
+  author: string;
+  date: string;
 }
 
 const projectsDatabase: Project[] = [
@@ -25,6 +27,8 @@ const projectsDatabase: Project[] = [
     status: "Devam Ediyor",
     category: "Araştırma",
     start_date: "2024-01-15",
+    author: "SPOLDER Araştırma Ekibi",
+    date: "15 Ocak 2024",
   },
   {
     id: 2,
@@ -35,6 +39,8 @@ const projectsDatabase: Project[] = [
     status: "Tamamlandı",
     category: "Eğitim",
     start_date: "2023-06-01",
+    author: "SPOLDER Politika Ekibi",
+    date: "1 Haziran 2023",
   },
   {
     id: 3,
@@ -45,6 +51,8 @@ const projectsDatabase: Project[] = [
     status: "Devam Ediyor",
     category: "Teknoloji",
     start_date: "2024-03-01",
+    author: "SPOLDER Teknoloji Ekibi",
+    date: "1 Mart 2024",
   },
   {
     id: 4,
@@ -55,6 +63,8 @@ const projectsDatabase: Project[] = [
     status: "Devam Ediyor",
     category: "Sosyal",
     start_date: "2024-02-01",
+    author: "SPOLDER Sosyal Etki Ekibi",
+    date: "1 Şubat 2024",
   },
   {
     id: 5,
@@ -65,6 +75,8 @@ const projectsDatabase: Project[] = [
     status: "Tamamlandı",
     category: "Araştırma",
     start_date: "2023-09-01",
+    author: "SPOLDER Eğitim Ekibi",
+    date: "1 Eylül 2023",
   },
   {
     id: 6,
@@ -75,6 +87,8 @@ const projectsDatabase: Project[] = [
     status: "Planlanıyor",
     category: "Sosyal",
     start_date: "2025-01-01",
+    author: "SPOLDER Erişilebilirlik Ekibi",
+    date: "1 Ocak 2025",
   },
 ];
 
@@ -149,7 +163,7 @@ const ProjeDetay = () => {
           <div className="container-custom mx-auto">
             <div className="max-w-3xl">
               <article className="prose prose-invert max-w-none mb-8">
-                {proje.fullContent.split("\n\n").map((paragraph, index) => (
+                {proje.content.split("\n\n").map((paragraph, index) => (
                   <p key={index} className="text-foreground/90 text-lg leading-relaxed mb-6">
                     {paragraph}
                   </p>

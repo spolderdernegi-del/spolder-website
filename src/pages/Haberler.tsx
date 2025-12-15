@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { Calendar, ArrowRight } from "lucide-react";
@@ -65,9 +66,47 @@ const newsItems = [
     category: "Araştırma",
     author: "SPOLDER",
   },
+  {
+    id: 7,
+    title: "Kadın Sporcular İçin Mentorluk Programı Başladı",
+    excerpt: "Kadın sporcuların kariyer gelişimini destekleyen mentorluk programımız başarıyla başlatıldı.",
+    content: "Kadın sporcuların kariyer gelişimini destekleyen mentorluk programımız başarıyla başlatıldı. Program kapsamında başarılı kadın sporcular ve spor yöneticileri, genç sporculara rehberlik edecek.",
+    date: "20 Kasım 2024",
+    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop&q=80",
+    category: "Program",
+    author: "SPOLDER",
+  },
+  {
+    id: 8,
+    title: "Sporda Sürdürülebilirlik Zirvesi 2024",
+    excerpt: "Yeşil enerji ve çevre dostu spor tesisleri konulu zirve düzenlendi.",
+    content: "Yeşil enerji ve çevre dostu spor tesisleri konulu zirve düzenlendi. Zirveye yerli ve yabancı uzmanlar katıldı, en iyi uygulamalar paylaşıldı.",
+    date: "15 Kasım 2024",
+    image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&auto=format&fit=crop&q=80",
+    category: "Zirve",
+    author: "SPOLDER",
+  },
+  {
+    id: 9,
+    title: "Engelsiz Spor Tesisleri Projesi Tanıtıldı",
+    excerpt: "Engelli bireylerin spora erişimini kolaylaştıran proje hayata geçiyor.",
+    content: "Engelli bireylerin spora erişimini kolaylaştıran proje hayata geçiyor. Pilot uygulama 5 ilde başlatıldı.",
+    date: "10 Kasım 2024",
+    image: "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=600&auto=format&fit=crop&q=80",
+    category: "Proje",
+    author: "SPOLDER",
+  },
 ];
 
 const Haberler = () => {
+  const [visibleCount, setVisibleCount] = useState(6);
+  
+  const loadMore = () => {
+    setVisibleCount(prev => Math.min(prev + 3, newsItems.length));
+  };
+  
+  const visibleNews = newsItems.slice(0, visibleCount);
+  const hasMore = visibleCount < newsItems.length;
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -88,7 +127,7 @@ const Haberler = () => {
         <section className="section-padding">
           <div className="container-custom mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {newsItems.map((item) => (
+              {visibleNews.map((item) => (
                 <Link
                   to={`/haber/${item.id}`}
                   key={item.id}
@@ -121,13 +160,13 @@ const Haberler = () => {
               ))}
             </div>
 
-            <div className="text-center mt-12">
-              <Link to="/haberler">
-                <Button variant="outline" size="lg">
+            {hasMore && (
+              <div className="text-center mt-12">
+                <Button onClick={loadMore} variant="outline" size="lg">
                   Daha Fazla Haber Yükle
                 </Button>
-              </Link>
-            </div>
+              </div>
+            )}
           </div>
         </section>
       </main>

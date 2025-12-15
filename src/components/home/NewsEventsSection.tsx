@@ -50,16 +50,19 @@ const announcements = [
     id: 1,
     title: "2025 Yılı Üyelik Başvuruları Başladı",
     date: "10 Ara 2024",
+    link: "/uyelik",
   },
   {
     id: 2,
     title: "Yeni Yayınımız: Spor ve Medya",
     date: "5 Ara 2024",
+    link: "/yayinlar",
   },
   {
     id: 3,
     title: "Staj Başvuruları Açıldı",
     date: "1 Ara 2024",
+    link: "/iletisim",
   },
 ];
 
@@ -133,8 +136,9 @@ const NewsEventsSection = () => {
 
               <div className="space-y-4">
                 {events.map((event) => (
-                  <div
+                  <Link
                     key={event.id}
+                    to={`/etkinlik/${event.id}`}
                     className="flex gap-4 bg-card rounded-lg p-4 shadow-soft card-hover"
                   >
                     <div className="w-16 h-16 rounded-lg bg-gradient-green flex flex-col items-center justify-center text-primary-foreground shrink-0">
@@ -143,13 +147,13 @@ const NewsEventsSection = () => {
                     </div>
                     <div className="flex-1 min-w-0">
                       <h4 className="font-semibold text-foreground text-sm line-clamp-2 hover:text-primary transition-colors">
-                        <Link to="/etkinlikler">{event.title}</Link>
+                        {event.title}
                       </h4>
                       <p className="text-muted-foreground text-xs mt-1">
                         📍 {event.location}
                       </p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>
@@ -164,20 +168,21 @@ const NewsEventsSection = () => {
 
               <div className="bg-card rounded-lg shadow-soft overflow-hidden">
                 {announcements.map((item, index) => (
-                  <div
+                  <Link
                     key={item.id}
-                    className={`p-4 flex items-start gap-3 hover:bg-muted/50 transition-colors cursor-pointer ${
+                    to={item.link}
+                    className={`p-4 flex items-start gap-3 hover:bg-muted/50 transition-colors ${
                       index !== announcements.length - 1 ? "border-b border-border" : ""
                     }`}
                   >
                     <Bell className="w-5 h-5 text-secondary shrink-0 mt-0.5" />
                     <div>
                       <h4 className="font-medium text-foreground text-sm hover:text-primary transition-colors">
-                        <Link to="/yayinlar">{item.title}</Link>
+                        {item.title}
                       </h4>
                       <p className="text-muted-foreground text-xs mt-1">{item.date}</p>
                     </div>
-                  </div>
+                  </Link>
                 ))}
               </div>
             </div>

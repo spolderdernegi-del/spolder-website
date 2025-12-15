@@ -1,3 +1,4 @@
+import { useState } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import { FileText, Download, Calendar, ExternalLink } from "lucide-react";
@@ -11,7 +12,8 @@ const publications = [
     year: "2024",
     description: "Cumhuriyet döneminden günümüze Türkiye'deki spor politikalarının kapsamlı analizi.",
     pages: 156,
-    downloadUrl: "#",
+    downloadUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    previewUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 2,
@@ -20,7 +22,8 @@ const publications = [
     year: "2024",
     description: "Türkiye'de kadın sporcuların karşılaştığı zorluklar üzerine saha araştırması.",
     pages: 98,
-    downloadUrl: "#",
+    downloadUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    previewUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 3,
@@ -29,7 +32,8 @@ const publications = [
     year: "2023",
     description: "Belediyelerin spor tesisi yatırımları ve erişilebilirlik konusunda öneriler.",
     pages: 45,
-    downloadUrl: "#",
+    downloadUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    previewUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 4,
@@ -38,7 +42,8 @@ const publications = [
     year: "2023",
     description: "Teknolojinin spor yönetimi ve performans analizindeki rolü.",
     pages: 72,
-    downloadUrl: "#",
+    downloadUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    previewUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 5,
@@ -47,7 +52,8 @@ const publications = [
     year: "2023",
     description: "Engelli bireylerin spor olanaklarına erişimi üzerine kapsamlı değerlendirme.",
     pages: 134,
-    downloadUrl: "#",
+    downloadUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    previewUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
   {
     id: 6,
@@ -56,7 +62,8 @@ const publications = [
     year: "2022",
     description: "Eğitim sisteminde beden eğitimi ve okul sporlarının güçlendirilmesi önerileri.",
     pages: 56,
-    downloadUrl: "#",
+    downloadUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
+    previewUrl: "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf",
   },
 ];
 
@@ -74,6 +81,12 @@ const getTypeColor = (type: string) => {
 };
 
 const Yayinlar = () => {
+  const [activeFilter, setActiveFilter] = useState("Tümü");
+
+  const filteredPublications = activeFilter === "Tümü" 
+    ? publications 
+    : publications.filter(pub => pub.type === activeFilter);
+
   return (
     <div className="min-h-screen bg-background">
       <Header />
@@ -94,16 +107,32 @@ const Yayinlar = () => {
       <section className="py-8 border-b border-border">
         <div className="container-custom mx-auto px-4">
           <div className="flex flex-wrap gap-2">
-            <Button variant="gradient" size="sm">
+            <Button 
+              variant={activeFilter === "Tümü" ? "gradient" : "outline"} 
+              size="sm"
+              onClick={() => setActiveFilter("Tümü")}
+            >
               Tümü
             </Button>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant={activeFilter === "Rapor" ? "gradient" : "outline"} 
+              size="sm"
+              onClick={() => setActiveFilter("Rapor")}
+            >
               Raporlar
             </Button>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant={activeFilter === "Araştırma" ? "gradient" : "outline"} 
+              size="sm"
+              onClick={() => setActiveFilter("Araştırma")}
+            >
               Araştırmalar
             </Button>
-            <Button variant="outline" size="sm">
+            <Button 
+              variant={activeFilter === "Politika Belgesi" ? "gradient" : "outline"} 
+              size="sm"
+              onClick={() => setActiveFilter("Politika Belgesi")}
+            >
               Politika Belgeleri
             </Button>
           </div>
@@ -114,7 +143,7 @@ const Yayinlar = () => {
       <section className="py-12">
         <div className="container-custom mx-auto px-4">
           <div className="grid md:grid-cols-2 gap-6">
-            {publications.map((pub) => (
+            {filteredPublications.map((pub) => (
               <article
                 key={pub.id}
                 className="group bg-card rounded-2xl p-6 shadow-card hover:shadow-card-hover transition-all duration-300 border border-border/50"
@@ -146,11 +175,26 @@ const Yayinlar = () => {
                         {pub.pages} sayfa
                       </span>
                       <div className="flex gap-2">
-                        <Button variant="outline" size="sm" className="text-xs">
+                        <Button 
+                          variant="outline" 
+                          size="sm" 
+                          className="text-xs"
+                          onClick={() => window.open(pub.previewUrl, '_blank')}
+                        >
                           <ExternalLink className="w-3 h-3 mr-1" />
                           Önizle
                         </Button>
-                        <Button variant="gradient" size="sm" className="text-xs">
+                        <Button 
+                          variant="gradient" 
+                          size="sm" 
+                          className="text-xs"
+                          onClick={() => {
+                            const link = document.createElement('a');
+                            link.href = pub.downloadUrl;
+                            link.download = `${pub.title}.pdf`;
+                            link.click();
+                          }}
+                        >
                           <Download className="w-3 h-3 mr-1" />
                           İndir
                         </Button>
