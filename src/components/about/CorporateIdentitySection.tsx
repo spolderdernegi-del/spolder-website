@@ -80,9 +80,9 @@ export default function CorporateIdentitySection() {
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4">
             <ColorSwatch name="Primary" className="bg-primary" />
+            <ColorSwatch name="Secondary" className="bg-secondary" />
             <ColorSwatch name="Foreground" className="bg-foreground" />
             <ColorSwatch name="Background" className="bg-background" />
-            <ColorSwatch name="Anthracite" className="bg-anthracite" />
           </CardContent>
         </Card>
       </div>

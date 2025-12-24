@@ -15,7 +15,7 @@
     --light-blue: 196 73% 52%;
     
     --background: 0 0% 100%;
-    --foreground: 0 1% 17%;
+    --foreground: 0 0% 17%;
 
     --card: 0 0% 100%;
     --card-foreground: 0 0% 17%;
@@ -23,11 +23,11 @@
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 17%;
 
-    --primary: 147 58% 51%;
-    --primary-light: 147 58% 51%;
+    --primary: 145 59% 42%;
+    --primary-light: 142 40% 52%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 197 81% 60%;
+    --secondary: 189 62% 44%;
     --secondary-foreground: 0 0% 100%;
 
     --muted: 210 20% 98%;
@@ -41,14 +41,14 @@
 
     --border: 210 20% 90%;
     --input: 210 20% 90%;
-    --ring: 147 58% 51%;
+    --ring: 145 59% 42%;
 
     --radius: 1rem;
 
     /* Custom gradients */
-    --gradient-green: linear-gradient(135deg, hsl(147, 58%, 51%), hsl(147, 58%, 51%));
-    --gradient-blue: linear-gradient(135deg, hsl(197, 81%, 60%), hsl(197, 81%, 60%));
-    --gradient-hero: linear-gradient(135deg, hsl(147, 58%, 51%) 0%, hsl(197, 81%, 60%) 100%);
+    --gradient-green: linear-gradient(135deg, hsl(142, 40%, 52%), hsl(145, 59%, 42%));
+    --gradient-blue: linear-gradient(135deg, hsl(189, 62%, 44%), hsl(193, 86%, 56%));
+    --gradient-hero: linear-gradient(135deg, hsl(145, 59%, 42%) 0%, hsl(189, 62%, 44%) 100%);
     
     /* Shadows */
     --shadow-sm: 0 2px 8px rgba(43, 43, 43, 0.08);
