@@ -10,9 +10,10 @@ const ColorSwatch = ({ name, className, hex }: { name: string; className: string
   return (
     <div className="flex items-center gap-3">
       <div ref={ref} className={`h-10 w-10 rounded border border-border ${className}`} />
-      <span className="text-sm text-muted-foreground">
-        <strong>{hex}</strong>
-      </span>
+      <div className="flex flex-col">
+        <span className="text-sm font-medium text-foreground">{name}</span>
+        <span className="text-xs text-muted-foreground">{hex}</span>
+      </div>
     </div>
   );
 };
@@ -60,10 +61,10 @@ export default function CorporateIdentitySection() {
             <CardTitle>Renk Paleti</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-2">
-            <ColorSwatch name="Primary" className="bg-primary" hex="#2FAC66" />
-            <ColorSwatch name="Secondary" className="bg-secondary" hex="#2DAAE2" />
-            <ColorSwatch name="Foreground" className="bg-foreground" hex="#2B2B2C" />
-            <ColorSwatch name="Background" className="bg-background" hex="#F7F7F7" />
+            <ColorSwatch name="Yeşil" className="bg-primary" hex="#2FAC66" />
+            <ColorSwatch name="Turkuaz" className="bg-secondary" hex="#2DAAE2" />
+            <ColorSwatch name="Koyu Gri" className="bg-foreground" hex="#2B2B2C" />
+            <ColorSwatch name="Açık Gri" className="bg-background" hex="#F7F7F7" />
           </CardContent>
         </Card>
       </div>
