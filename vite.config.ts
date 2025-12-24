@@ -8,6 +8,10 @@ export default defineConfig(({ mode }) => ({
     host: "::",
     port: 8080,
   },
+  build: {
+    // Increase chunk size warning threshold (in kB)
+    chunkSizeWarningLimit: 1500,
+  },
   plugins: [react()],
   resolve: {
     alias: {
