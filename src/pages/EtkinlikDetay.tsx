@@ -237,6 +237,10 @@ const EtkinlikDetay = () => {
                       Kayıt Linki Eklenmemiş
                     </Button>
                   )}
+
+                  <p className="text-xs text-muted-foreground mt-3 text-center">
+                    Google Form üzerinden kayıt yaptırılacaktır
+                  </p>
                 </div>
 
                 {/* Info Box */}
