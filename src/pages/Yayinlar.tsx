@@ -1,8 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { FileText, Download, Calendar, ExternalLink } from "lucide-react";
+import { FileText, Download, Calendar, ExternalLink, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Publication {
+  id: number;
+  title: string;
+  type: string;
+  year: string;
+  description: string;
+  pages: number;
+  downloadUrl: string;
+  previewUrl: string;
+  created_at: string;
+}
 
 const publications = [
   {
@@ -81,7 +94,47 @@ const getTypeColor = (type: string) => {
 };
 
 const Yayinlar = () => {
+  const [publications, setPublications] = useState<Publication[]>([]);
   const [activeFilter, setActiveFilter] = useState("Tümü");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchPublications();
+  }, []);
+
+  const fetchPublications = async () => {
+    try {
+      setLoading(true);
+      const { data, error: supabaseError } = await supabase
+        .from("files")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (supabaseError) throw supabaseError;
+      setPublications(data || []);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Yayınlar yüklenirken hata oluştu");
+      console.error("Error fetching publications:", err);
+      setPublications(publications);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getTypeColor = (type: string) => {
+    switch (type) {
+      case "Rapor":
+        return "bg-primary/10 text-primary";
+      case "Araştırma":
+        return "bg-secondary/10 text-secondary";
+      case "Politika Belgesi":
+        return "bg-accent/10 text-accent";
+      default:
+        return "bg-muted text-muted-foreground";
+    }
+  };
 
   const filteredPublications = activeFilter === "Tümü" 
     ? publications 
@@ -104,45 +157,67 @@ const Yayinlar = () => {
       </section>
 
       {/* Filter Tabs */}
-      <section className="py-8 border-b border-border">
-        <div className="container-custom mx-auto px-4">
-          <div className="flex flex-wrap gap-2">
-            <Button 
-              variant={activeFilter === "Tümü" ? "gradient" : "outline"} 
-              size="sm"
-              onClick={() => setActiveFilter("Tümü")}
-            >
-              Tümü
-            </Button>
-            <Button 
-              variant={activeFilter === "Rapor" ? "gradient" : "outline"} 
-              size="sm"
-              onClick={() => setActiveFilter("Rapor")}
-            >
-              Raporlar
-            </Button>
-            <Button 
-              variant={activeFilter === "Araştırma" ? "gradient" : "outline"} 
-              size="sm"
-              onClick={() => setActiveFilter("Araştırma")}
-            >
-              Araştırmalar
-            </Button>
-            <Button 
-              variant={activeFilter === "Politika Belgesi" ? "gradient" : "outline"} 
-              size="sm"
-              onClick={() => setActiveFilter("Politika Belgesi")}
-            >
-              Politika Belgeleri
-            </Button>
+      {!loading && (
+        <section className="py-8 border-b border-border">
+          <div className="container-custom mx-auto px-4">
+            <div className="flex flex-wrap gap-2">
+              <Button 
+                variant={activeFilter === "Tümü" ? "gradient" : "outline"} 
+                size="sm"
+                onClick={() => setActiveFilter("Tümü")}
+              >
+                Tümü
+              </Button>
+              <Button 
+                variant={activeFilter === "Rapor" ? "gradient" : "outline"} 
+                size="sm"
+                onClick={() => setActiveFilter("Rapor")}
+              >
+                Raporlar
+              </Button>
+              <Button 
+                variant={activeFilter === "Araştırma" ? "gradient" : "outline"} 
+                size="sm"
+                onClick={() => setActiveFilter("Araştırma")}
+              >
+                Araştırmalar
+              </Button>
+              <Button 
+                variant={activeFilter === "Politika Belgesi" ? "gradient" : "outline"} 
+                size="sm"
+                onClick={() => setActiveFilter("Politika Belgesi")}
+              >
+                Politika Belgeleri
+              </Button>
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
+
+      {/* Loading State */}
+      {loading && (
+        <section className="py-12">
+          <div className="container-custom mx-auto px-4 flex justify-center items-center min-h-96">
+            <Loader className="w-8 h-8 animate-spin text-primary" />
+          </div>
+        </section>
+      )}
+
+      {/* Empty State */}
+      {!loading && filteredPublications.length === 0 && (
+        <section className="py-12">
+          <div className="container-custom mx-auto px-4 text-center">
+            <h3 className="text-xl font-bold text-foreground mb-2">Yayın bulunamadı</h3>
+            <p className="text-muted-foreground">Seçili kategoride yayın yok.</p>
+          </div>
+        </section>
+      )}
 
       {/* Publications Grid */}
-      <section className="py-12">
-        <div className="container-custom mx-auto px-4">
-          <div className="grid md:grid-cols-2 gap-6">
+      {!loading && filteredPublications.length > 0 && (
+        <section className="py-12">
+          <div className="container-custom mx-auto px-4">
+            <div className="grid md:grid-cols-2 gap-6">
             {filteredPublications.map((pub) => (
               <article
                 key={pub.id}
@@ -204,37 +279,40 @@ const Yayinlar = () => {
                 </div>
               </article>
             ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       {/* Stats Section */}
-      <section className="py-16 bg-muted/30">
-        <div className="container-custom mx-auto px-4">
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
-            <div>
-              <div className="font-display text-4xl font-bold text-primary mb-2">25+</div>
-              <p className="text-sm text-muted-foreground">Yayınlanan Rapor</p>
-            </div>
-            <div>
-              <div className="font-display text-4xl font-bold text-secondary mb-2">15+</div>
-              <p className="text-sm text-muted-foreground">Araştırma Projesi</p>
-            </div>
-            <div>
-              <div className="font-display text-4xl font-bold text-accent mb-2">10K+</div>
-              <p className="text-sm text-muted-foreground">İndirme Sayısı</p>
-            </div>
-            <div>
-              <div className="font-display text-4xl font-bold text-primary mb-2">50+</div>
-              <p className="text-sm text-muted-foreground">Akademik Atıf</p>
+      {!loading && (
+        <section className="py-16 bg-muted/30">
+          <div className="container-custom mx-auto px-4">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8 text-center">
+              <div>
+                <div className="font-display text-4xl font-bold text-primary mb-2">25+</div>
+                <p className="text-sm text-muted-foreground">Yayınlanan Rapor</p>
+              </div>
+              <div>
+                <div className="font-display text-4xl font-bold text-secondary mb-2">15+</div>
+                <p className="text-sm text-muted-foreground">Araştırma Projesi</p>
+              </div>
+              <div>
+                <div className="font-display text-4xl font-bold text-accent mb-2">10K+</div>
+                <p className="text-sm text-muted-foreground">İndirme Sayısı</p>
+              </div>
+              <div>
+                <div className="font-display text-4xl font-bold text-primary mb-2">50+</div>
+                <p className="text-sm text-muted-foreground">Akademik Atıf</p>
+              </div>
             </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
 
       <Footer />
     </div>
   );
 };
 
-export default Yayinlar;
+export default Yayinlar;export default Yayinlar;

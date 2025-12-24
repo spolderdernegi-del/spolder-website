@@ -1,8 +1,21 @@
+import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { ArrowRight } from "lucide-react";
+import { Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  image: string;
+  status: string;
+  content: string;
+  author: string;
+  created_at: string;
+}
 
 const projects = [
   {
@@ -56,6 +69,34 @@ const projects = [
 ];
 
 const Projeler = () => {
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchProjects();
+  }, []);
+
+  const fetchProjects = async () => {
+    try {
+      setLoading(true);
+      const { data, error: supabaseError } = await supabase
+        .from("projects")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (supabaseError) throw supabaseError;
+      setProjects(data || []);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Projeler yüklenirken hata oluştu");
+      console.error("Error fetching projects:", err);
+      setProjects(projects);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -72,11 +113,31 @@ const Projeler = () => {
           </div>
         </section>
 
+        {/* Loading State */}
+        {loading && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto flex justify-center items-center min-h-96">
+              <Loader className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          </section>
+        )}
+
+        {/* Empty State */}
+        {!loading && projects.length === 0 && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto text-center">
+              <h3 className="text-xl font-bold text-foreground mb-2">Proje bulunamadı</h3>
+              <p className="text-muted-foreground">Şu anda gösterilecek bir proje yok.</p>
+            </div>
+          </section>
+        )}
+
         {/* Projects Grid */}
-        <section className="section-padding">
-          <div className="container-custom mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {projects.map((project) => (
+        {!loading && projects.length > 0 && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {projects.map((project) => (
                 <article key={project.id} className="bg-card rounded-lg overflow-hidden shadow-card card-hover group">
                   <div className="relative h-52 overflow-hidden">
                     <img
@@ -85,11 +146,7 @@ const Projeler = () => {
                       className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-anthracite/60 to-transparent" />
-                    <span className={`absolute top-4 right-4 px-3 py-1 text-xs font-medium rounded-full ${
-                      project.statusColor === "primary" ? "bg-primary text-primary-foreground" :
-                      project.statusColor === "secondary" ? "bg-secondary text-secondary-foreground" :
-                      "bg-turquoise text-primary-foreground"
-                    }`}>
+                    <span className={`absolute top-4 right-4 px-3 py-1 text-xs font-medium rounded-full bg-primary text-primary-foreground`}>
                       {project.status}
                     </span>
                   </div>
@@ -104,7 +161,7 @@ const Projeler = () => {
                     </p>
                     <Button variant="ghost" size="sm" className="text-primary p-0 h-auto">
                       <Link to={`/proje/${project.id}`} className="flex items-center">
-                        Detaylar <ArrowRight className="w-4 h-4 ml-1" />
+                        Detaylar
                       </Link>
                     </Button>
                   </div>
@@ -113,6 +170,7 @@ const Projeler = () => {
             </div>
           </div>
         </section>
+        )}
       </main>
       <Footer />
     </div>

@@ -1,8 +1,24 @@
+import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { MapPin, Clock, ArrowRight } from "lucide-react";
+import { MapPin, Clock, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+
+interface Event {
+  id: number;
+  title: string;
+  description: string;
+  content: string;
+  date: string;
+  time: string;
+  location: string;
+  image: string;
+  status: string;
+  author: string;
+  created_at: string;
+}
 
 const events = [
   {
@@ -44,6 +60,34 @@ const events = [
 ];
 
 const Etkinlikler = () => {
+  const [events, setEvents] = useState<Event[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+  const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const { data, error: supabaseError } = await supabase
+        .from("events")
+        .select("*")
+        .order("date", { ascending: true });
+      
+      if (supabaseError) throw supabaseError;
+      setEvents(data || []);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Etkinlikler yüklenirken hata oluştu");
+      console.error("Error fetching events:", err);
+      setEvents(events);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -60,18 +104,38 @@ const Etkinlikler = () => {
           </div>
         </section>
 
+        {/* Loading State */}
+        {loading && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto flex justify-center items-center min-h-96">
+              <Loader className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          </section>
+        )}
+
+        {/* Empty State */}
+        {!loading && events.length === 0 && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto text-center">
+              <h3 className="text-xl font-bold text-foreground mb-2">Etkinlik bulunamadı</h3>
+              <p className="text-muted-foreground">Şu anda gösterilecek bir etkinlik yok.</p>
+            </div>
+          </section>
+        )}
+
         {/* Events Grid */}
-        <section className="section-padding">
-          <div className="container-custom mx-auto">
-            <div className="space-y-8">
-              {events.map((event) => (
+        {!loading && events.length > 0 && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto">
+              <div className="space-y-8">
+                {events.map((event) => (
                 <article key={event.id} className="bg-card rounded-lg overflow-hidden shadow-card card-hover">
                   <div className="flex flex-col md:flex-row">
                     {/* Date Box */}
                     <div className="md:w-32 shrink-0 bg-gradient-green p-6 flex flex-row md:flex-col items-center justify-center text-primary-foreground">
                       <span className="text-4xl font-bold">{event.date}</span>
-                      <span className="text-lg uppercase ml-2 md:ml-0">{event.month}</span>
-                      <span className="text-sm ml-2 md:ml-0 md:mt-1">{event.year}</span>
+                      <span className="text-lg uppercase ml-2 md:ml-0">TEM</span>
+                      <span className="text-sm ml-2 md:ml-0 md:mt-1">2025</span>
                     </div>
                     
                     {/* Image */}
@@ -100,7 +164,7 @@ const Etkinlikler = () => {
                       <div className="mt-4 flex gap-2">
                         <Link to={`/etkinlik/${event.id}`}>
                           <Button variant="outline" size="sm">
-                            Detaylar <ArrowRight className="w-4 h-4 ml-1" />
+                            Detaylar
                           </Button>
                         </Link>
                         <a
@@ -109,7 +173,7 @@ const Etkinlikler = () => {
                           rel="noopener noreferrer"
                         >
                           <Button variant="turquoise" size="sm">
-                            Kayıt Ol <ArrowRight className="w-4 h-4 ml-1" />
+                            Kayıt Ol
                           </Button>
                         </a>
                       </div>
@@ -120,6 +184,7 @@ const Etkinlikler = () => {
             </div>
           </div>
         </section>
+        )}
       </main>
       <Footer />
     </div>

@@ -1,9 +1,22 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Calendar, ArrowRight } from "lucide-react";
+import { Calendar, Loader } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
+
+interface NewsItem {
+  id: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  date: string;
+  image: string;
+  category: string;
+  author: string;
+  created_at: string;
+}
 
 const newsItems = [
   {
@@ -99,14 +112,43 @@ const newsItems = [
 ];
 
 const Haberler = () => {
+  const [news, setNews] = useState<NewsItem[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [visibleCount, setVisibleCount] = useState(6);
-  
-  const loadMore = () => {
-    setVisibleCount(prev => Math.min(prev + 3, newsItems.length));
+
+  useEffect(() => {
+    fetchNews();
+  }, []);
+
+  const fetchNews = async () => {
+    try {
+      setLoading(true);
+      const { data, error: supabaseError } = await supabase
+        .from("news")
+        .select("*")
+        .order("created_at", { ascending: false });
+      
+      if (supabaseError) throw supabaseError;
+      setNews(data || []);
+      setError(null);
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Haberler yüklenirken hata oluştu");
+      console.error("Error fetching news:", err);
+      // Fallback to hardcoded data if Supabase fails
+      setNews(newsItems);
+    } finally {
+      setLoading(false);
+    }
   };
   
-  const visibleNews = newsItems.slice(0, visibleCount);
-  const hasMore = visibleCount < newsItems.length;
+  const loadMore = () => {
+    setVisibleCount(prev => Math.min(prev + 3, news.length));
+  };
+  
+  const visibleNews = news.slice(0, visibleCount);
+  const hasMore = visibleCount < news.length;
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />
@@ -123,23 +165,43 @@ const Haberler = () => {
           </div>
         </section>
 
+        {/* Loading State */}
+        {loading && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto flex justify-center items-center min-h-96">
+              <Loader className="w-8 h-8 animate-spin text-primary" />
+            </div>
+          </section>
+        )}
+
+        {/* Empty State */}
+        {!loading && news.length === 0 && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto text-center">
+              <h3 className="text-xl font-bold text-foreground mb-2">Haber bulunamadı</h3>
+              <p className="text-muted-foreground">Şu anda gösterilecek bir haber yok.</p>
+            </div>
+          </section>
+        )}
+
         {/* News Grid */}
-        <section className="section-padding">
-          <div className="container-custom mx-auto">
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {visibleNews.map((item) => (
-                <Link
-                  to={`/haber/${item.id}`}
-                  key={item.id}
-                  className="bg-card rounded-lg overflow-hidden shadow-card card-hover block"
-                >
-                  <div className="relative h-52">
-                    <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
-                    <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
-                      {item.category}
-                    </span>
-                  </div>
-                  <div className="p-6">
+        {!loading && news.length > 0 && (
+          <section className="section-padding">
+            <div className="container-custom mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {visibleNews.map((item) => (
+                  <Link
+                    to={`/haber/${item.id}`}
+                    key={item.id}
+                    className="bg-card rounded-lg overflow-hidden shadow-card card-hover block"
+                  >
+                    <div className="relative h-52">
+                      <img src={item.image} alt={item.title} className="w-full h-full object-cover" />
+                      <span className="absolute top-4 left-4 px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full">
+                        {item.category}
+                      </span>
+                    </div>
+                    <div className="p-6">
                     <h3 className="font-display font-bold text-lg text-foreground mb-2 line-clamp-2 hover:text-primary transition-colors">
                       {item.title}
                     </h3>
