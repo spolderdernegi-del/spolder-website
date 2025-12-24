@@ -32,6 +32,7 @@ const Projeler = () => {
       const { data, error: supabaseError } = await supabase
         .from("projects")
         .select("*")
+        .eq('publishStatus', 'published')
         .order("created_at", { ascending: false });
       
       if (supabaseError) throw supabaseError;

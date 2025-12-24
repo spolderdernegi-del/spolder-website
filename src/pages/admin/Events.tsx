@@ -72,11 +72,16 @@ const AdminEvents = () => {
     fetchCategories();
   }, []);
 
-  const fetchCategories = () => {
+  const fetchCategories = async () => {
     try {
-      const storedCategories = localStorage.getItem('spolder_categories');
-      const categoriesData = storedCategories ? JSON.parse(storedCategories) : [];
-      setCategories(categoriesData.filter((c: any) => c.type === 'events'));
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('type', 'events')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      setCategories(data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -246,7 +251,7 @@ const AdminEvents = () => {
     }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedEvents.length === 0) {
       toast.warning('Lütfen silinecek etkinlikleri seçin');
       return;
@@ -255,14 +260,16 @@ const AdminEvents = () => {
     if (!confirm(`${selectedEvents.length} etkinlik silinecek. Emin misiniz?`)) return;
 
     try {
-      const storedEvents = localStorage.getItem('spolder_events');
-      const eventsData = storedEvents ? JSON.parse(storedEvents) : [];
-      const filtered = eventsData.filter((e: Event) => !selectedEvents.includes(e.id));
-      localStorage.setItem('spolder_events', JSON.stringify(filtered));
-      
+      const { error } = await supabase
+        .from('events')
+        .delete()
+        .in('id', selectedEvents);
+
+      if (error) throw error;
+
       logActivity('delete', 'event', `${selectedEvents.length} etkinlik`);
       toast.success(`${selectedEvents.length} etkinlik başarıyla silindi!`);
-      
+
       setSelectedEvents([]);
       fetchEvents();
     } catch (error: any) {
@@ -270,22 +277,20 @@ const AdminEvents = () => {
     }
   };
 
-  const togglePublishStatus = (event: Event) => {
+  const togglePublishStatus = async (event: Event) => {
     try {
-      const storedEvents = localStorage.getItem('spolder_events');
-      const eventsData = storedEvents ? JSON.parse(storedEvents) : [];
-      const index = eventsData.findIndex((e: Event) => e.id === event.id);
-      
-      if (index !== -1) {
-        const newStatus = event.publishStatus === 'published' ? 'draft' : 'published';
-        eventsData[index].publishStatus = newStatus;
-        localStorage.setItem('spolder_events', JSON.stringify(eventsData));
-        
-        logActivity(newStatus === 'published' ? 'publish' : 'unpublish', 'event', event.title);
-        toast.success(`"${event.title}" ${newStatus === 'published' ? 'yayınlandı' : 'taslağa alındı'}!`);
-        
-        fetchEvents();
-      }
+      const newStatus = event.publishStatus === 'published' ? 'draft' : 'published';
+      const { error } = await supabase
+        .from('events')
+        .update({ publishStatus: newStatus })
+        .eq('id', event.id);
+
+      if (error) throw error;
+
+      logActivity(newStatus === 'published' ? 'publish' : 'unpublish', 'event', event.title);
+      toast.success(`"${event.title}" ${newStatus === 'published' ? 'yayınlandı' : 'taslağa alındı'}!`);
+
+      fetchEvents();
     } catch (error: any) {
       toast.error("Hata: " + error.message);
     }

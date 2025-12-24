@@ -90,7 +90,7 @@ const AdminSettings = () => {
     }
   };
 
-  const handlePasswordChange = () => {
+  const handlePasswordChange = async () => {
     if (!newPassword || !confirmPassword) {
       toast.warning('Lütfen tüm alanları doldurun');
       return;
@@ -106,11 +106,17 @@ const AdminSettings = () => {
       return;
     }
 
-    // Şimdilik sadece localStorage'da saklıyoruz
-    localStorage.setItem('admin_password', newPassword);
-    toast.success('Şifre başarıyla değiştirildi!');
-    setNewPassword('');
-    setConfirmPassword('');
+    try {
+      const { error } = await supabase
+        .from('settings')
+        .upsert({ key: 'admin_password', value: newPassword, updated_at: new Date().toISOString() }, { onConflict: 'key' });
+      if (error) throw error;
+      toast.success('Şifre başarıyla değiştirildi!');
+      setNewPassword('');
+      setConfirmPassword('');
+    } catch (err: any) {
+      toast.error('Şifre güncellenemedi: ' + err.message);
+    }
   };
 
   const formatDate = (dateString: string) => {

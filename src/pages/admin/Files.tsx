@@ -43,11 +43,15 @@ const AdminFiles = () => {
     fetchCategories();
   }, []);
 
-  const fetchCategories = () => {
+  const fetchCategories = async () => {
     try {
-      const storedCategories = localStorage.getItem('spolder_categories');
-      const categoriesData = storedCategories ? JSON.parse(storedCategories) : [];
-      setCategories(categoriesData.filter((c: any) => c.type === 'files'));
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('type', 'files')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setCategories(data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }
@@ -67,11 +71,16 @@ const AdminFiles = () => {
 
   const fetchFiles = async () => {
     try {
-      const storedFiles = localStorage.getItem('spolder_files');
-      const filesData = storedFiles ? JSON.parse(storedFiles) : [];
-      setFiles(filesData);
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('files')
+        .select('*')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setFiles(data || []);
     } catch (error) {
       console.error("Error fetching files:", error);
+      toast.error('Dosyalar yüklenirken hata oluştu');
     } finally {
       setLoading(false);
     }
@@ -120,31 +129,32 @@ const AdminFiles = () => {
         fileData = await uploadFileToStorage();
       }
 
-      const dataToSave = {
-        ...formData,
-        file_url: fileData?.url || editingFile?.file_url || "",
-        file_type: fileData?.type || editingFile?.file_type || "",
-        file_size: fileData?.size || editingFile?.file_size || 0,
+      const dataToSave: any = {
+        title: formData.title,
+        description: formData.description,
+        category: formData.category,
+        file_url: fileData?.url ?? editingFile?.file_url ?? "",
+        file_type: fileData?.type ?? editingFile?.file_type ?? "",
+        file_size: fileData?.size ?? editingFile?.file_size ?? 0,
       };
 
-      const storedFiles = localStorage.getItem('spolder_files');
-      const filesData = storedFiles ? JSON.parse(storedFiles) : [];
-
       if (editingFile) {
-        const index = filesData.findIndex((f: File) => f.id === editingFile.id);
-        if (index !== -1) {
-          filesData[index] = { ...dataToSave, id: editingFile.id, created_at: editingFile.created_at, updated_at: new Date().toISOString() };
-        }
+        const { error } = await supabase
+          .from('files')
+          .update(dataToSave)
+          .eq('id', editingFile.id);
+        if (error) throw error;
         logActivity('update', 'file', formData.title);
         toast.success('Dosya güncellendi!');
       } else {
-        const newFile = { ...dataToSave, id: Date.now(), created_at: new Date().toISOString(), updated_at: new Date().toISOString() };
-        filesData.unshift(newFile);
+        const { error } = await supabase
+          .from('files')
+          .insert([dataToSave]);
+        if (error) throw error;
         logActivity('create', 'file', formData.title);
         toast.success('Dosya eklendi!');
       }
 
-      localStorage.setItem('spolder_files', JSON.stringify(filesData));
       resetForm();
       fetchFiles();
     } catch (error: any) {
@@ -170,11 +180,12 @@ const AdminFiles = () => {
     if (!confirm("Bu dosyayı silmek istediğinizden emin misiniz?")) return;
 
     try {
-      const storedFiles = localStorage.getItem('spolder_files');
-      const filesData = storedFiles ? JSON.parse(storedFiles) : [];
-      const filtered = filesData.filter((f: File) => f.id !== id);
-      localStorage.setItem('spolder_files', JSON.stringify(filtered));
-      
+      const { error } = await supabase
+        .from('files')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+
       logActivity('delete', 'file', file?.title || 'Dosya');
       toast.success('Dosya silindi!');
       fetchFiles();
@@ -183,7 +194,7 @@ const AdminFiles = () => {
     }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedFiles.length === 0) {
       toast.warning('Lütfen silinecek dosyaları seçin');
       return;
@@ -192,11 +203,12 @@ const AdminFiles = () => {
     if (!confirm(`${selectedFiles.length} dosya silinecek. Emin misiniz?`)) return;
 
     try {
-      const storedFiles = localStorage.getItem('spolder_files');
-      const filesData = storedFiles ? JSON.parse(storedFiles) : [];
-      const filtered = filesData.filter((f: File) => !selectedFiles.includes(f.id));
-      localStorage.setItem('spolder_files', JSON.stringify(filtered));
-      
+      const { error } = await supabase
+        .from('files')
+        .delete()
+        .in('id', selectedFiles);
+      if (error) throw error;
+
       logActivity('delete', 'file', `${selectedFiles.length} dosya`);
       toast.success(`${selectedFiles.length} dosya silindi!`);
       

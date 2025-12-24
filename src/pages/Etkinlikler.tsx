@@ -35,6 +35,7 @@ const Etkinlikler = () => {
       const { data, error: supabaseError } = await supabase
         .from("events")
         .select("*")
+        .eq('publishStatus', 'published')
         .order("date", { ascending: true });
       
       if (supabaseError) throw supabaseError;

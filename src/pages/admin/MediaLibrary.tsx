@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import { useNavigate, Link } from "react-router-dom";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ArrowLeft, Upload, Trash2, Search, Image as ImageIcon } from "lucide-react";
 import { toast } from "@/lib/toast";
+import { logActivity } from "@/lib/activityLog";
 
 interface MediaItem {
   id: number;
@@ -26,19 +28,44 @@ const AdminMediaLibrary = () => {
     loadMedia();
   }, []);
 
-  const checkAuth = () => {
+  const checkAuth = async () => {
     const simpleAuth = localStorage.getItem("adminAuth");
-    if (simpleAuth !== "true") {
+    if (simpleAuth === "true") {
+      setLoading(false);
+      return;
+    }
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) {
       navigate("/admin/login");
       return;
     }
     setLoading(false);
   };
 
-  const loadMedia = () => {
-    const stored = localStorage.getItem('spolder_media_library');
-    const mediaData = stored ? JSON.parse(stored) : [];
-    setMedia(mediaData);
+  const loadMedia = async () => {
+    try {
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('files')
+        .select('*')
+        .order('created_at', { ascending: false });
+
+      if (error) throw error;
+      const mapped = (data || []).map((row: any) => ({
+        id: row.id,
+        url: row.file_url,
+        name: row.title || 'Dosya',
+        size: row.file_size || 0,
+        type: row.file_type || 'application/octet-stream',
+        uploadedAt: row.created_at,
+      } as MediaItem));
+      setMedia(mapped);
+    } catch (err) {
+      console.error('Error loading media:', err);
+      toast.error('Medya yüklenirken hata oluştu');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -47,39 +74,51 @@ const AdminMediaLibrary = () => {
 
     Array.from(files).forEach((file) => {
       const reader = new FileReader();
-      reader.onloadend = () => {
-        const newMedia: MediaItem = {
-          id: Date.now() + Math.random(),
-          url: reader.result as string,
-          name: file.name,
-          size: file.size,
-          type: file.type,
-          uploadedAt: new Date().toISOString()
-        };
-
-        const stored = localStorage.getItem('spolder_media_library');
-        const mediaData = stored ? JSON.parse(stored) : [];
-        mediaData.unshift(newMedia);
-        localStorage.setItem('spolder_media_library', JSON.stringify(mediaData));
-        
-        loadMedia();
-        toast.success(`"${file.name}" yüklendi!`);
+      reader.onloadend = async () => {
+        try {
+          const fileUrl = reader.result as string; // Base64 data URL
+          const { error } = await supabase.from('files').insert([
+            {
+              title: file.name,
+              description: null,
+              file_url: fileUrl,
+              file_type: file.type,
+              file_size: file.size,
+              category: 'media',
+            },
+          ]);
+          if (error) throw error;
+          logActivity('create', 'file', file.name);
+          toast.success(`"${file.name}" yüklendi!`);
+          loadMedia();
+        } catch (err: any) {
+          console.error('Upload error:', err);
+          toast.error('Yükleme sırasında hata oluştu: ' + err.message);
+        }
       };
       reader.readAsDataURL(file);
     });
   };
 
-  const handleDelete = (id: number) => {
+  const handleDelete = async (id: number) => {
     const item = media.find(m => m.id === id);
     if (!confirm(`"${item?.name}" silinecek. Emin misiniz?`)) return;
 
-    const filtered = media.filter(m => m.id !== id);
-    localStorage.setItem('spolder_media_library', JSON.stringify(filtered));
-    loadMedia();
-    toast.success('Medya silindi!');
+    try {
+      const { error } = await supabase
+        .from('files')
+        .delete()
+        .eq('id', id);
+      if (error) throw error;
+      logActivity('delete', 'file', item?.name || String(id));
+      toast.success('Medya silindi!');
+      loadMedia();
+    } catch (err: any) {
+      toast.error('Silme sırasında hata oluştu: ' + err.message);
+    }
   };
 
-  const handleBulkDelete = () => {
+  const handleBulkDelete = async () => {
     if (selectedMedia.length === 0) {
       toast.warning('Lütfen silinecek medyaları seçin');
       return;
@@ -87,11 +126,19 @@ const AdminMediaLibrary = () => {
 
     if (!confirm(`${selectedMedia.length} medya silinecek. Emin misiniz?`)) return;
 
-    const filtered = media.filter(m => !selectedMedia.includes(m.id));
-    localStorage.setItem('spolder_media_library', JSON.stringify(filtered));
-    setSelectedMedia([]);
-    loadMedia();
-    toast.success(`${selectedMedia.length} medya silindi!`);
+    try {
+      const { error } = await supabase
+        .from('files')
+        .delete()
+        .in('id', selectedMedia);
+      if (error) throw error;
+      logActivity('delete', 'file', `${selectedMedia.length} medya`);
+      setSelectedMedia([]);
+      loadMedia();
+      toast.success(`${selectedMedia.length} medya silindi!`);
+    } catch (err: any) {
+      toast.error('Toplu silme sırasında hata: ' + err.message);
+    }
   };
 
   const copyToClipboard = (url: string) => {

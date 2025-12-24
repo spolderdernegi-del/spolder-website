@@ -60,11 +60,15 @@ const AdminNews = () => {
     fetchCategories();
   }, []);
 
-  const fetchCategories = () => {
+  const fetchCategories = async () => {
     try {
-      const storedCategories = localStorage.getItem('spolder_categories');
-      const categoriesData = storedCategories ? JSON.parse(storedCategories) : [];
-      setCategories(categoriesData.filter((c: any) => c.type === 'news'));
+      const { data, error } = await supabase
+        .from('categories')
+        .select('*')
+        .eq('type', 'news')
+        .order('created_at', { ascending: false });
+      if (error) throw error;
+      setCategories(data || []);
     } catch (error) {
       console.error("Error fetching categories:", error);
     }

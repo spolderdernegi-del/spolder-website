@@ -33,6 +33,7 @@ const Blog = () => {
       const { data, error: supabaseError } = await supabase
         .from("blog")
         .select("*")
+        .eq('publishStatus', 'published')
         .order("created_at", { ascending: false });
       
       if (supabaseError) throw supabaseError;

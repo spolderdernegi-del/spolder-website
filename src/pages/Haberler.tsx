@@ -34,6 +34,7 @@ const Haberler = () => {
       const { data, error: supabaseError } = await supabase
         .from("news")
         .select("*")
+        .eq('publishStatus', 'published')
         .order("created_at", { ascending: false });
       
       if (supabaseError) throw supabaseError;
