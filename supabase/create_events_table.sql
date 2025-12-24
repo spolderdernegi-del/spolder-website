@@ -30,11 +30,11 @@ CREATE TABLE public.events (
 -- RLS aktif et
 ALTER TABLE public.events ENABLE ROW LEVEL SECURITY;
 
--- Policies: Okuma herkese açık, yazma authenticated
+-- Policies: Okuma herkese açık, yazma authenticated VEYA geçici bypass
 CREATE POLICY read_events ON public.events FOR SELECT USING (true);
-CREATE POLICY write_events ON public.events FOR INSERT WITH CHECK (auth.uid() IS NOT NULL);
-CREATE POLICY update_events ON public.events FOR UPDATE USING (auth.uid() IS NOT NULL);
-CREATE POLICY delete_events ON public.events FOR DELETE USING (auth.uid() IS NOT NULL);
+CREATE POLICY write_events ON public.events FOR INSERT WITH CHECK (true);
+CREATE POLICY update_events ON public.events FOR UPDATE USING (true);
+CREATE POLICY delete_events ON public.events FOR DELETE USING (true);
 
 -- Grants
 GRANT USAGE ON SCHEMA public TO anon, authenticated;
