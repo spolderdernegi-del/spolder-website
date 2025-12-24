@@ -6,6 +6,7 @@ import { Input } from "@/components/ui/input";
 import { allContent } from "@/lib/searchIndex";
 
 const navItems = [
+
   { label: "Ana Sayfa", href: "/" },
   { label: "Hakkımızda", href: "/hakkimizda" },
   { label: "Haberler", href: "/haberler" },

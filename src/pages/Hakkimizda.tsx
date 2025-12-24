@@ -1,8 +1,8 @@
-import React from "react";
+﻿import React from "react";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
-import { Button } from "@/components/ui/button";
-import { Target, Eye, Heart, Users, Award, Globe } from "lucide-react";
+import { Target, Eye, Heart } from "lucide-react";
+import CorporateIdentitySection from "@/components/about/CorporateIdentitySection";
 
 const boardMembers = [
   {
@@ -47,14 +47,14 @@ const Hakkimizda = () => {
       <main className="flex-1 pt-20">
         {/* Hero */}
         <section className="bg-gradient-green py-20">
-                  <div className="container-custom mx-auto px-4 md:px-8 text-center">
-                    <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
-                      Hakkımızda
-                    </h1>
-                    <p className="text-lg text-primary-foreground/90 max-w-2xl mx-auto">
-                      SPOlDER Spor Politikaları Derneği'ni tanıyın.
-                    </p>
-                  </div>
+          <div className="container-custom mx-auto px-4 md:px-8 text-center">
+            <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground mb-4">
+              Hakkımızda
+            </h1>
+            <p className="text-lg text-primary-foreground/90 max-w-2xl mx-auto">
+              SPOLDER Spor Politikaları Derneği'ni tanıyın.
+            </p>
+          </div>
         </section>
 
         {/* President Message */}
@@ -69,19 +69,14 @@ const Hakkimizda = () => {
                   Sporun Gücüne İnanıyoruz
                 </h2>
                 <p className="text-muted-foreground leading-relaxed">
-                  "SPOlDER olarak, sporun sadece bir fiziksel aktivite olmadığına, aynı zamanda toplumsal 
-                  dönüşümün önemli bir aracı olduğuna inanıyoruz. Kurulduğumuz günden bu yana, bilimsel 
-                  temelli spor politikalarının geliştirilmesi için çalışıyoruz."
+                  "SPOLDER olarak, sporun sadece bir fiziksel aktivite olmadığına, aynı zamanda toplumsal dönüşümün önemli bir aracı olduğuna inanıyoruz. Kurulduğumuz günden bu yana, bilimsel temelli spor politikalarının geliştirilmesi için çalışıyoruz."
                 </p>
                 <p className="text-muted-foreground leading-relaxed">
-                  "Amacımız, Türkiye'nin spor ekosistemini güçlendirmek ve herkesin spor yapma hakkını 
-                  savunmaktır. Bu yolda tüm paydaşlarımızla birlikte yürümeye devam edeceğiz."
+                  "Amacımız, Türkiye'nin spor ekosistemini güçlendirmek ve herkesin spor yapma hakkını savunmaktır. Bu yolda tüm paydaşlarımızla birlikte yürümeye devam edeceğiz."
                 </p>
                 <p className="font-display font-bold text-foreground">
                   Dr. Ahmet Yılmaz
-                  <span className="font-normal text-muted-foreground block text-sm">
-                    SPOlDER Başkanı
-                  </span>
+                  <span className="font-normal text-muted-foreground block text-sm">SPOLDER Başkanı</span>
                 </p>
               </div>
               <div className="relative">
@@ -100,16 +95,38 @@ const Hakkimizda = () => {
           <div className="container-custom mx-auto">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
               {[
-                { icon: Target, title: "Misyon", text: "Türkiye'de spor politikalarının bilimsel temellere dayalı olarak geliştirilmesine katkı sağlamak.", color: "primary" },
-                { icon: Eye, title: "Vizyon", text: "Spor politikaları alanında ulusal ve uluslararası düzeyde öncü bir sivil toplum kuruluşu olmak.", color: "secondary" },
-                { icon: Heart, title: "Değerler", text: "Bilimsellik, şeffaflık, katılımcılık, yenilikçilik ve sürdürülebilirlik.", color: "turquoise" },
+                {
+                  icon: Target,
+                  title: "Misyon",
+                  text:
+                    "Türkiye'de spor politikalarının bilimsel temellere dayalı olarak geliştirilmesine katkı sağlamak.",
+                  color: "primary",
+                },
+                {
+                  icon: Eye,
+                  title: "Vizyon",
+                  text:
+                    "Spor politikaları alanında ulusal ve uluslararası düzeyde öncü bir sivil toplum kuruluşu olmak.",
+                  color: "secondary",
+                },
+                {
+                  icon: Heart,
+                  title: "Değerler",
+                  text:
+                    "Bilimsellik, şeffaflık, katılımcılık, yenilikçilik ve sürdürülebilirlik.",
+                  color: "turquoise",
+                },
               ].map((item) => (
                 <div key={item.title} className="bg-card rounded-lg p-8 shadow-card text-center">
-                  <div className={`w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center ${
-                    item.color === "primary" ? "bg-primary/10 text-primary" :
-                    item.color === "secondary" ? "bg-secondary/10 text-secondary" :
-                    "bg-turquoise/10 text-turquoise"
-                  }`}>
+                  <div
+                    className={`w-16 h-16 rounded-full mx-auto mb-6 flex items-center justify-center ${
+                      item.color === "primary"
+                        ? "bg-primary/10 text-primary"
+                        : item.color === "secondary"
+                        ? "bg-secondary/10 text-secondary"
+                        : "bg-turquoise/10 text-turquoise"
+                    }`}
+                  >
                     <item.icon className="w-8 h-8" />
                   </div>
                   <h3 className="font-display text-xl font-bold text-foreground mb-4">{item.title}</h3>
@@ -125,9 +142,7 @@ const Hakkimizda = () => {
           <div className="container-custom mx-auto">
             <div className="text-center mb-12">
               <span className="text-sky-500 font-semibold text-sm uppercase tracking-wider">Ekibimiz</span>
-              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2">
-                Yönetim Kurulu
-              </h2>
+              <h2 className="font-display text-3xl md:text-4xl font-bold text-foreground mt-2">Yönetim Kurulu</h2>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
               {boardMembers.map((member) => (
@@ -144,6 +159,13 @@ const Hakkimizda = () => {
                 </button>
               ))}
             </div>
+          </div>
+        </section>
+
+        {/* Kurumsal Kimlik */}
+        <section className="section-padding bg-muted">
+          <div className="container-custom mx-auto">
+            <CorporateIdentitySection />
           </div>
         </section>
       </main>
