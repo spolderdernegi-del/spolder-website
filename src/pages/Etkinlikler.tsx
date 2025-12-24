@@ -8,15 +8,15 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface Event {
   id: number;
-  title: string;
-  description: string;
-  content: string;
-  date: string;
-  time: string;
-  location: string;
-  image: string;
-  status: string;
-  author: string;
+  baslik: string;
+  ozet: string;
+  icerik: string;
+  tarih: string;
+  saat: string;
+  konum: string;
+  gorsel: string;
+  durum: string;
+  slug?: string;
   created_at: string;
 }
 
@@ -35,8 +35,8 @@ const Etkinlikler = () => {
       const { data, error: supabaseError } = await supabase
         .from("events")
         .select("*")
-        .eq('publishStatus', 'published')
-        .order("date", { ascending: true });
+        .eq('yayin_durumu', 'yayinlandi')
+        .order("tarih", { ascending: true });
       
       if (supabaseError) throw supabaseError;
       setEvents(data || []);
@@ -94,31 +94,31 @@ const Etkinlikler = () => {
                   <div className="flex flex-col md:flex-row">
                     {/* Date Box */}
                     <div className="md:w-32 shrink-0 bg-gradient-green p-6 flex flex-row md:flex-col items-center justify-center text-primary-foreground">
-                      <span className="text-4xl font-bold">{event.date}</span>
+                      <span className="text-4xl font-bold">{event.tarih}</span>
                       <span className="text-lg uppercase ml-2 md:ml-0">TEM</span>
                       <span className="text-sm ml-2 md:ml-0 md:mt-1">2025</span>
                     </div>
                     
                     {/* Image */}
                     <div className="md:w-64 shrink-0">
-                      <img src={event.image} alt={event.title} className="w-full h-48 md:h-full object-cover" />
+                      <img src={event.gorsel} alt={event.baslik} className="w-full h-48 md:h-full object-cover" />
                     </div>
 
                     {/* Content */}
                     <div className="flex-1 p-6 flex flex-col justify-between">
                       <div>
                         <h3 className="font-display font-bold text-xl text-foreground mb-2 hover:text-primary transition-colors">
-                          <Link to={`/etkinlik/${event.id}`}>{event.title}</Link>
+                          <Link to={`/etkinlik/${event.id}`}>{event.baslik}</Link>
                         </h3>
-                        <p className="text-muted-foreground mb-4">{event.description}</p>
+                        <p className="text-muted-foreground mb-4">{event.ozet}</p>
                         <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
                           <span className="flex items-center gap-1">
                             <Clock className="w-4 h-4 text-secondary" />
-                            {event.time}
+                            {event.saat}
                           </span>
                           <span className="flex items-center gap-1">
                             <MapPin className="w-4 h-4 text-secondary" />
-                            {event.location}
+                            {event.konum}
                           </span>
                         </div>
                       </div>

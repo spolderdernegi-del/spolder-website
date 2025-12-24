@@ -6,12 +6,12 @@ import { supabase } from "@/integrations/supabase/client";
 
 interface SlideEvent {
   id: number;
-  title: string;
-  excerpt: string;
-  image: string;
-  date: string;
-  category: string;
-  showInSlider?: boolean;
+  baslik: string;
+  ozet: string;
+  gorsel: string;
+  tarih: string;
+  kategori: string;
+  sliderda_goster?: boolean;
 }
 
 const HeroSlider = () => {
@@ -25,9 +25,9 @@ const HeroSlider = () => {
       try {
         const { data, error } = await supabase
           .from('events')
-          .select('id, title, excerpt, image, date, category, showInSlider')
-          .eq('showInSlider', true)
-          .eq('publishStatus', 'published')
+          .select('id, baslik, ozet, gorsel, tarih, kategori, sliderda_goster')
+          .eq('sliderda_goster', true)
+          .eq('yayin_durumu', 'yayinlandi')
           .order('created_at', { ascending: false });
         
         if (error) {
@@ -82,7 +82,7 @@ const HeroSlider = () => {
         >
           <div
             className="absolute inset-0 bg-cover bg-center"
-            style={{ backgroundImage: `url(${slide.image})` }}
+            style={{ backgroundImage: `url(${slide.gorsel})` }}
           />
           <div className="absolute inset-0 bg-gradient-to-r from-anthracite/90 via-anthracite/60 to-transparent" />
         </div>
@@ -94,23 +94,23 @@ const HeroSlider = () => {
           <div className="max-w-2xl space-y-6 animate-fade-up">
             {/* Category Badge */}
             <span className="inline-flex items-center px-4 py-1.5 rounded-full bg-primary text-primary-foreground text-sm font-medium">
-              {slides[currentSlide].category}
+              {slides[currentSlide].kategori}
             </span>
 
             {/* Title */}
             <h1 className="font-display text-4xl md:text-5xl lg:text-6xl font-bold text-primary-foreground leading-tight">
-              {slides[currentSlide].title}
+              {slides[currentSlide].baslik}
             </h1>
 
             {/* Description */}
             <p className="text-lg text-primary-foreground/90 leading-relaxed max-w-xl">
-              {slides[currentSlide].excerpt}
+              {slides[currentSlide].ozet}
             </p>
 
             {/* Date */}
             <div className="flex items-center gap-2 text-primary-foreground/70">
               <Calendar className="w-4 h-4" />
-              <span className="text-sm">{slides[currentSlide].date}</span>
+              <span className="text-sm">{slides[currentSlide].tarih}</span>
             </div>
 
             {/* CTA */}
