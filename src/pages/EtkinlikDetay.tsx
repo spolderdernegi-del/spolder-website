@@ -5,6 +5,21 @@ import Footer from "@/components/layout/Footer";
 import { Calendar, MapPin, Clock, ArrowLeft, Users } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+interface Event {
+  id: number;
+  title: string;
+  excerpt: string;
+  full_content?: string;
+  date: string;
+  time: string;
+  location: string;
+  image: string;
+  category: string;
+  capacity: string;
+  registered: string;
+  status: string;
+}
+
 const eventsDatabase = [
   {
     id: 1,
@@ -59,6 +74,7 @@ const eventsDatabase = [
 const EtkinlikDetay = () => {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  
   const etkinlik = eventsDatabase.find((e) => e.id === parseInt(id || "0"));
 
   if (!etkinlik) {

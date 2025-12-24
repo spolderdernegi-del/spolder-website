@@ -4,78 +4,99 @@ import Footer from "@/components/layout/Footer";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const projectDatabase = [
+interface Project {
+  id: number;
+  title: string;
+  description: string;
+  content: string;
+  image: string;
+  category: string;
+  status: string;
+  start_date: string;
+  author: string;
+  date: string;
+}
+
+const projectsDatabase: Project[] = [
   {
     id: 1,
     title: "Spor ve Toplum Araştırması",
-    excerpt: "Türkiye genelinde spor alışkanlıklarını ve spor tesislerine erişimi inceleyen kapsamlı araştırma projesi.",
-    fullContent: "Spor ve Toplum Araştırması, Türkiye genelinde spor alışkanlıklarını, spor tesislerine erişimi ve toplumun spor dünyasına bakış açısını inceleyen kapsamlı bir araştırma projesidir. Bu araştırma, spor politikalarının geliştirilmesine temel oluşturmaktadır.\n\nAraştırmanın sonuçları, spor alanında yapılan yatırımların ve politikaların daha etkili olmasını sağlamıştır.",
-    date: "Başlangıç: 2020",
-    author: "SPOlDER Araştırma Ekibi",
-    image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=1200&auto=format&fit=crop&q=80",
-    category: "Araştırma",
+    description: "Türkiye genelinde spor alışkanlıklarını ve spor tesislerine erişimi inceleyen kapsamlı araştırma projesi.",
+    content: "Türkiye genelinde spor alışkanlıklarını ve spor tesislerine erişimi inceleyen kapsamlı araştırma projesi. Bu proje, toplumun spor yapma alışkanlıklarını, spor tesislerine erişim durumunu ve sporun toplumsal etkilerini analiz etmektedir.\n\nAraştırma kapsamında 81 ilde anket çalışmaları yürütülmekte, spor tesislerinin dağılımı haritalanmakta ve farklı demografik grupların spor alışkanlıkları karşılaştırılmaktadır. Proje sonuçları, spor politikalarının geliştirilmesine katkı sağlayacaktır.",
+    image: "https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=600&auto=format&fit=crop&q=80",
     status: "Devam Ediyor",
+    category: "Araştırma",
+    start_date: "2024-01-15",
+    author: "SPOLDER Araştırma Ekibi",
+    date: "15 Ocak 2024",
   },
   {
     id: 2,
     title: "Yerel Spor Politikaları Rehberi",
-    excerpt: "Belediyelere yönelik spor politikası geliştirme rehberi hazırlama projesi.",
-    fullContent: "Yerel Spor Politikaları Rehberi, Türkiye'deki belediyelerin spor alanında daha etkili politikalar geliştirmelerine yardımcı olmak amacıyla hazırlanan kapsamlı bir kılavuzdur. Rehberde, spor tesisleri planlaması, finansman ve halk katılımı gibi konular ele alınmıştır.\n\nBu rehber, belediyelerin spor yatırımlarında bilimsel temelli kararlar almalarını sağlamaktadır.",
-    date: "Başlangıç: 2021",
-    author: "SPOlDER Proje Koordinatörleri",
-    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&auto=format&fit=crop&q=80",
-    category: "Rehber",
+    description: "Belediyelere yönelik spor politikası geliştirme rehberi hazırlama projesi.",
+    content: "Belediyelere yönelik spor politikası geliştirme rehberi hazırlama projesi. Yerel yönetimlerin spor alanlarındaki rolü ve sorumlulukları gün geçtikçe artmaktadır.\n\nBu proje kapsamında, belediyelerin spor politikası oluşturması, tesis yönetimi, bütçe planlaması ve toplumsal spor programları geliştirmesi için kapsamlı bir rehber hazırlanmıştır. Rehber, en iyi uygulamalar ve örnek vaka çalışmaları içermektedir.",
+    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=600&auto=format&fit=crop&q=80",
     status: "Tamamlandı",
+    category: "Eğitim",
+    start_date: "2023-06-01",
+    author: "SPOLDER Politika Ekibi",
+    date: "1 Haziran 2023",
   },
   {
     id: 3,
     title: "Spor Ekonomisi İzleme Sistemi",
-    excerpt: "Türkiye'nin spor ekonomisini takip eden dijital platform geliştirme projesi.",
-    fullContent: "Spor Ekonomisi İzleme Sistemi, Türkiye'nin spor ekonomisine ilişkin verileri gerçek zamanlı takip eden ve analiz eden dijital bir platformdur. Sistem, spor endüstrisinin ekonomik katkısını, istihdam durumunu ve gelişim trendlerini göstermektedir.\n\nBu platform, spor alanında çalışanlar ve karar alıcılar için önemli bir bilgi kaynağıdır.",
-    date: "Başlangıç: 2022",
-    author: "SPOlDER Teknoloji Ekibi",
-    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&auto=format&fit=crop&q=80",
-    category: "Teknoloji",
+    description: "Türkiye'nin spor ekonomisini takip eden dijital platform geliştirme projesi.",
+    content: "Türkiye'nin spor ekonomisini takip eden dijital platform geliştirme projesi. Spor sektörünün ekonomik katkılarını düzenli olarak izlemek ve raporlamak amacıyla bir dijital platform geliştirilmektedir.\n\nPlatform, spor sektörünün GSYH'ye katkısı, istihdam rakamları, yatırım verileri ve uluslararası karşılaştırmaları içerecektir. Veriler, politika yapıcılar, araştırmacılar ve sektör akterleri tarafından kullanılabilecektir.",
+    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=600&auto=format&fit=crop&q=80",
     status: "Devam Ediyor",
+    category: "Teknoloji",
+    start_date: "2024-03-01",
+    author: "SPOLDER Teknoloji Ekibi",
+    date: "1 Mart 2024",
   },
   {
     id: 4,
     title: "Kadın Sporcu Destek Programı",
-    excerpt: "Kadın sporcuların kariyer gelişimini destekleyen mentorluk ve eğitim programı.",
-    fullContent: "Kadın Sporcu Destek Programı, kadın sporcuların kariyer gelişimini, eğitim imkanlarını ve finansal desteğini sağlayan kapsamlı bir programdır. Program, mentorluk, staj fırsatları ve finansal burslar sunmaktadır.\n\nBu program, Türkiye'de kadın sporcuların daha görünür ve başarılı olmasını sağlamaya yönelik bir girişimdir.",
-    date: "Başlangıç: 2021",
-    author: "SPOlDER Spor Kalkınma Ekibi",
-    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&auto=format&fit=crop&q=80",
-    category: "Sosyal",
+    description: "Kadın sporcuların kariyer gelişimini destekleyen mentorluk ve eğitim programı.",
+    content: "Kadın sporcuların kariyer gelişimini destekleyen mentorluk ve eğitim programı. Kadın sporcuların karşılaştığı zorlukları aşmak ve başarılı kariyer yolları oluşturmaları için kapsamlı bir destek programı yürütülmektedir.\n\nProgram kapsamında mentorluk, liderlik eğitimi, kariyer danışmanlığı ve ağ oluşturma fırsatları sunulmaktadır. Başarılı kadın sporcular, genç sporculara rehberlik etmektedir.",
+    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&auto=format&fit=crop&q=80",
     status: "Devam Ediyor",
+    category: "Sosyal",
+    start_date: "2024-02-01",
+    author: "SPOLDER Sosyal Etki Ekibi",
+    date: "1 Şubat 2024",
   },
   {
     id: 5,
     title: "Okul Sporları Analiz Raporu",
-    excerpt: "Türkiye'deki okul sporları sisteminin kapsamlı analizi ve politika önerileri.",
-    fullContent: "Okul Sporları Analiz Raporu, Türkiye'deki okul sporları sisteminin kapsamlı bir analizi ve geleceğe yönelik politika önerilerini içermektedir. Rapor, okul sporlarının gelişimi, öğrenci katılımı ve kaynaklandırma konularını ele almaktadır.\n\nBu rapor, eğitim ve spor bakanlıkları tarafından politika oluştururken referans olarak kullanılmıştır.",
-    date: "Başlangıç: 2019",
-    author: "SPOlDER Eğitim Ekibi",
-    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&auto=format&fit=crop&q=80",
-    category: "Eğitim",
+    description: "Türkiye'deki okul sporları sisteminin kapsamlı analizi ve politika önerileri.",
+    content: "Türkiye'deki okul sporları sisteminin kapsamlı analizi ve politika önerileri. Okul sporları, gençlerin spor alışkanlıkları kazanması ve yetenekli sporcuların keşfedilmesi açısından kritik öneme sahiptir.\n\nBu projede, okul sporlarının mevcut durumu, karşılaşılan sorunlar ve geliştirilmesi gereken alanlar analiz edilmiştir. Rapor, politika yapıcılar ve eğitim kurumları için somut öneriler içermektedir.",
+    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&auto=format&fit=crop&q=80",
     status: "Tamamlandı",
+    category: "Araştırma",
+    start_date: "2023-09-01",
+    author: "SPOLDER Eğitim Ekibi",
+    date: "1 Eylül 2023",
   },
   {
     id: 6,
     title: "Engelli Sporları Erişilebilirlik Projesi",
-    excerpt: "Engelli bireylerin spora erişimini artırmaya yönelik kapsamlı araştırma ve savunuculuk projesi.",
-    fullContent: "Engelli Sporları Erişilebilirlik Projesi, engelli bireylerin spora ve fiziksel aktivitelere erişimini artırmak amacıyla yürütülen kapsamlı bir araştırma ve savunuculuk projesidir. Proje, engelli sporcuların karşılaştığı engellerin belirlenmesi ve çözüm önerileri getirilmesini hedeflemektedir.\n\nProje kapsamında, erişilebilir spor tesisleri ve programları hakkında öneriler sunulmaktadır.",
-    date: "Başlangıç: 2023",
-    author: "SPOlDER İçerme Ekibi",
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&auto=format&fit=crop&q=80",
-    category: "Erişilebilirlik",
+    description: "Engelli bireylerin spora erişimini artırmaya yönelik kapsamlı araştırma ve savunuculuk projesi.",
+    content: "Engelli bireylerin spora erişimini artırmaya yönelik kapsamlı araştırma ve savunuculuk projesi. Tüm bireylerin spor yapma hakkına sahip olması ilkesinden hareketle, engelli bireylerin karşılaştığı engellerin tespit edilmesi ve çözüm önerileri geliştirilmesi hedeflenmektedir.\n\nProje kapsamında tesis erişilebilirliği denetimi, engelli sporcu eğitim programları ve farkındalık kampanyaları yürütülecektir.",
+    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&auto=format&fit=crop&q=80",
     status: "Planlanıyor",
+    category: "Sosyal",
+    start_date: "2025-01-01",
+    author: "SPOLDER Erişilebilirlik Ekibi",
+    date: "1 Ocak 2025",
   },
 ];
 
 const ProjeDetay = () => {
   const { id } = useParams<{ id: string }>();
-  const proje = projectDatabase.find((p) => p.id === parseInt(id || "0"));
+  const navigate = useNavigate();
+  
+  const proje = projectsDatabase.find((p) => p.id === parseInt(id || "0"));
 
   if (!proje) {
     return (
@@ -142,7 +163,7 @@ const ProjeDetay = () => {
           <div className="container-custom mx-auto">
             <div className="max-w-3xl">
               <article className="prose prose-invert max-w-none mb-8">
-                {proje.fullContent.split("\n\n").map((paragraph, index) => (
+                {proje.content.split("\n\n").map((paragraph, index) => (
                   <p key={index} className="text-foreground/90 text-lg leading-relaxed mb-6">
                     {paragraph}
                   </p>

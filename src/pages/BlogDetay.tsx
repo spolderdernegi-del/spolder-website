@@ -4,74 +4,87 @@ import Footer from "@/components/layout/Footer";
 import { Calendar, User, ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-const blogDatabase = [
+interface BlogPost {
+  id: number;
+  title: string;
+  excerpt: string;
+  content: string;
+  date: string;
+  author: string;
+  image: string;
+  category: string;
+}
+
+const blogDatabase: BlogPost[] = [
   {
     id: 1,
     title: "Spor Politikalarında Yeni Yaklaşımlar",
     excerpt: "Modern spor politikalarının toplum üzerindeki etkilerini ve gelecek vizyonunu ele alan kapsamlı bir analiz.",
-    fullContent: "Modern spor politikalarının toplum üzerindeki etkilerini ve gelecek vizyonunu ele alan kapsamlı bir analiz. Spor, sadece bireysel başarı değil, toplumsal gelişim ve kalkınmanın da bir aracı olarak görülmeli. Yeni yaklaşımlar, katılımcılık, şeffaflık ve bilimselliği önemsiyor.\n\nBu yazıda, spor politikalarında yenilikçi yaklaşımların nasıl uygulanabileceği ve toplumsal etkisinin nasıl arttırılabileceği ele alınmaktadır.",
-    date: "28 Kasım 2024",
+    content: "Modern spor politikalarının toplum üzerindeki etkilerini ve gelecek vizyonunu ele alan kapsamlı bir analiz. Spor, sadece fiziksel bir aktivite olmaktan çıkıp toplumsal dönüşümün bir aracı haline gelmiştir.\n\nSpor politikaları, toplumsal cinsiyet eşitliği, sosyal içerme, sağlıklı yaşam ve ekonomik kalkınma gibi alanlarda önemli bir rol oynamaktadır. Günümüzde spor politikalarının tasarımında katılımcılık, sürdürülebilirlik ve erişilebilirlik ilkeleri ön plana çıkmaktadır.\n\nGelecekte spor politikalarının daha kapsayıcı, veri odaklı ve toplumun tüm kesimlerine ulaşan bir yapıda olması beklenmektedir.",
+    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=600&h=400&fit=crop",
     author: "Dr. Ahmet Yılmaz",
-    image: "https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=1200&auto=format&fit=crop&q=80",
+    date: "28 Kasım 2024",
     category: "Analiz",
   },
   {
     id: 2,
     title: "Kadın Sporculara Destek Programları",
     excerpt: "Türkiye'de kadın sporcuların karşılaştığı zorluklar ve çözüm önerileri üzerine bir değerlendirme.",
-    fullContent: "Türkiye'de kadın sporcuların karşılaştığı zorluklar, fırsatlar ve çözüm önerileri üzerine kapsamlı bir değerlendirme. Kadın sporcuların eğitim, finansman ve kültürel destek konularında yaşadıkları engelleri ortadan kaldırmak için neler yapılabilir?\n\nDestek programları, mentorluk ve fırsat eşitliği sağlanması gerekmektedir.",
-    date: "25 Kasım 2024",
+    content: "Türkiye'de kadın sporcuların karşılaştığı zorluklar ve çözüm önerileri üzerine bir değerlendirme. Kadınların spora katılımı, toplumsal cinsiyet eşitliği açısından kritik bir göstergedir.\n\nKadın sporcular, sosyal baskı, ekonomik zorluklar, tesis eksikliği ve temsil sorunları gibi birçok engellekarşılaşmaktadır. Bu engellerin aşılması için kapsamlı politika ve program desteğine ihtiyaç vardır.\n\nMentorluk programları, burs destekleri, tesis yatırımları ve farkındalık kampanyaları, kadınların spora katılımını artırmanın etkili yollarıdır. Başarılı kadın sporcuların rol model olması da gençlerin spora yönelmesinde önemli bir faktördür.",
+    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=600&h=400&fit=crop",
     author: "Prof. Elif Kaya",
-    image: "https://images.unsplash.com/photo-1571019614242-c5c5dee9f50b?w=1200&auto=format&fit=crop&q=80",
+    date: "25 Kasım 2024",
     category: "Araştırma",
   },
   {
     id: 3,
     title: "Spor ve Sürdürülebilirlik",
     excerpt: "Çevre dostu spor tesisleri ve sürdürülebilir spor etkinlikleri hakkında güncel gelişmeler.",
-    fullContent: "Çevre dostu spor tesisleri ve sürdürülebilir spor etkinlikleri hakkında güncel gelişmeler. Spor organizasyonları düşük karbon ayak izi ile gerçekleştirilmeli ve çevre koruma önlemleri alınmalıdır.\n\nSürdürülebilir spor, gelecek nesillerin de bu sporları yaşayabilmesi için oldukça önemlidir.",
-    date: "20 Kasım 2024",
+    content: "Çevre dostu spor tesisleri ve sürdürülebilir spor etkinlikleri hakkında güncel gelişmeler. İklim değişikliği ve çevre sorunları, spor sektörünü de yakından ilgilendirmektedir.\n\nSpor tesislerinin enerji tüketimi, büyük organizasyonların karbon ayak izi ve doğal kaynakların kullanımı, sürdürülebilirlik açısından önemli konulardır. Yeşil binalar, yenilenebilir enerji kullanımı ve atık yönetimi gibi uygulamalar yaygınlaşmaktadır.\n\nUluslararası spor organizasyonları, sürdürülebilirlik kriterlerini şartlarına ekleyerek sektörü dönüştürmeye çalışmaktadır. Türkiye'de de yerel ve ulusal düzeyde çevre dostu spor politikalarının geliştirilmesi gerekmektedir.",
+    image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=600&h=400&fit=crop",
     author: "Mehmet Demir",
-    image: "https://images.unsplash.com/photo-1542831371-29b0f74f9713?w=1200&auto=format&fit=crop&q=80",
+    date: "20 Kasım 2024",
     category: "Görüş",
   },
   {
     id: 4,
     title: "Dijital Dönüşüm ve Spor",
     excerpt: "Teknolojinin spor dünyasındaki dönüştürücü etkisi ve geleceğe yönelik öngörüler.",
-    fullContent: "Teknolojinin spor dünyasındaki dönüştürücü etkisi ve geleceğe yönelik öngörüler. Yapay zeka, veri analizi ve dijital platformlar sporların nasıl oynanıp izlendiğini tamamen değiştirmiştir.\n\nGelecekteki spor deneyimleri daha interaktif ve erişilebilir olacaktır.",
-    date: "15 Kasım 2024",
+    content: "Teknolojinin spor dünyasındaki dönüştürücü etkisi ve geleceğe yönelik öngörüler. Dijital teknolojiler, sporun her alanında köklü değişimlere yol açmaktadır.\n\nYapay zeka, büyük veri analitiği, giyilebilir teknolojiler ve sanal gerçeklik, sporcuların performansını artırmak, antrenman yöntemlerini geliştirmek ve taraftar deneyimini zenginleştirmek için kullanılmaktadır.\n\nE-spor'un yükselişi, dijitalleşmenin spor kavramını nasıl genişlettiğinin önemli bir göstergesidir. Gelecekte teknoloji ve sporun entegrasyonunun daha da derinleşmesi beklenmektedir.",
+    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=600&h=400&fit=crop",
     author: "Zeynep Arslan",
-    image: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=1200&auto=format&fit=crop&q=80",
+    date: "15 Kasım 2024",
     category: "Teknoloji",
   },
   {
     id: 5,
     title: "Engelli Sporculara Eşit Fırsatlar",
     excerpt: "Engelli bireylerin spora erişimi ve paralimpik hareketin Türkiye'deki gelişimi.",
-    fullContent: "Engelli bireylerin spora erişimi ve paralimpik hareketin Türkiye'deki gelişimi. Her birey kabiliyetine bakılmaksızın spor yapma ve fiziksel aktivitelere katılma hakkına sahiptir.\n\nErişilebilir spor tesisleri ve programları tüm bireylerin katılımını sağlamalıdır.",
-    date: "10 Kasım 2024",
+    content: "Engelli bireylerin spora erişimi ve paralimpik hareketin Türkiye'deki gelişimi. Her birey, kabiliyetine bakılmaksızın spor yapma ve fiziksel aktivitelere katılma hakkına sahiptir.\n\nErişilebilir spor tesisleri, özel eğitim programları ve destek hizmetleri, engelli bireylerin spora katılımı için kritik öneme sahiptir. Paralimpik hareket, engelli sporcuların yeteneklerini sergileyebilecekleri platformlar sunmaktadır.\n\nTürkiye'de engelli sporlarının gelişimi için tesis yatırımları, antrenör eğitimi ve farkındalık çalışmalarına ihtiyaç vardır. Toplumsal tutum değişikliği, engelli bireylerin spor yoluyla sosyal içermesinin sağlanmasında kilit rol oynar.",
+    image: "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=600&h=400&fit=crop",
     author: "Ali Öztürk",
-    image: "https://images.unsplash.com/photo-1591343395082-e120087004b4?w=1200&auto=format&fit=crop&q=80",
+    date: "10 Kasım 2024",
     category: "Sosyal",
   },
   {
     id: 6,
     title: "Gençlik ve Spor Kültürü",
     excerpt: "Z kuşağının spor alışkanlıkları ve spor kültürünün gençler arasında yaygınlaştırılması.",
-    fullContent: "Z kuşağının spor alışkanlıkları ve spor kültürünün gençler arasında yaygınlaştırılması. Sosyal medya ve dijital platformlar gençlerin spor kültürüne katılımını etkilemektedir.\n\nGeleneksel spor türlerinin yanı sıra e-sporlar ve yeni spor aktiviteleri de gençleri çekmeye başlamıştır.",
-    date: "5 Kasım 2024",
+    content: "Z kuşağının spor alışkanlıkları ve spor kültürünün gençler arasında yaygınlaştırılması. Gençlerin spor yapma alışkanlıkları, dijitalleşme ve yaşam tarzı değişiklikleriyle dönüşmektedir.\n\nGeleneksel takım sporlarının yanı sıra bireysel sporlar, fitnes ve ekstrem sporlar gençler arasında popülerlik kazanmaktadır. Sosyal medyanın rolü, gençlerin spor tercihlerini ve motivasyonlarını şekillendirmede önemli bir faktördür.\n\nOkul sporları, toplum merkezleri ve gençlik programları, spor kültürünün yaygınlaştırılmasında temel araçlardır. Gençlerin ilgi ve ihtiyaçlarına uygun, esnek ve çeşitli spor fırsatları sunulması gerekmektedir.",
+    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=600&h=400&fit=crop",
     author: "Selin Yıldız",
-    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&auto=format&fit=crop&q=80",
+    date: "5 Kasım 2024",
     category: "Gençlik",
   },
 ];
 
 const BlogDetay = () => {
   const { id } = useParams<{ id: string }>();
-  const blog = blogDatabase.find((b) => b.id === parseInt(id || "0"));
+  const navigate = useNavigate();
+  
+  const post = blogDatabase.find((p) => p.id === parseInt(id || "0"));
 
-  if (!blog) {
+  if (!post) {
     return (
       <div className="min-h-screen flex flex-col">
         <Header />
@@ -95,18 +108,18 @@ const BlogDetay = () => {
         {/* Hero Image */}
         <section className="relative h-96">
           <img
-            src={blog.image}
-            alt={blog.title}
+            src={post.image}
+            alt={post.title}
             className="w-full h-full object-cover"
           />
           <div className="absolute inset-0 bg-gradient-to-t from-anthracite/80 to-transparent" />
           <div className="absolute bottom-0 left-0 right-0 p-8">
             <div className="container-custom mx-auto">
               <span className="inline-block px-3 py-1 bg-primary text-primary-foreground text-xs font-medium rounded-full mb-4">
-                {blog.category}
+                {post.category}
               </span>
               <h1 className="font-display text-4xl md:text-5xl font-bold text-primary-foreground">
-                {blog.title}
+                {post.title}
               </h1>
             </div>
           </div>
@@ -117,11 +130,11 @@ const BlogDetay = () => {
             <div className="flex flex-wrap gap-6 text-muted-foreground">
               <div className="flex items-center gap-2">
                 <User className="w-4 h-4" />
-                <span>{blog.author}</span>
+                <span>{post.author}</span>
               </div>
               <div className="flex items-center gap-2">
                 <Calendar className="w-4 h-4" />
-                <span>{blog.date}</span>
+                <span>{post.date}</span>
               </div>
             </div>
           </div>
@@ -131,7 +144,7 @@ const BlogDetay = () => {
           <div className="container-custom mx-auto">
             <div className="max-w-3xl">
               <article className="prose prose-invert max-w-none mb-8">
-                {blog.fullContent.split("\n\n").map((paragraph, index) => (
+                {(post.content || post.excerpt).split("\n").map((paragraph, index) => (
                   <p key={index} className="text-foreground/90 text-lg leading-relaxed mb-6">
                     {paragraph}
                   </p>

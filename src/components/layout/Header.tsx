@@ -3,8 +3,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { Menu, X, Search } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import logoFull from "@/assets/logo_disi.webp";
-import logoMark from "@/assets/logo_erkek_tek.webp";
 import { allContent } from "@/lib/searchIndex";
 
 const navItems = [
@@ -56,7 +54,7 @@ const Header = () => {
         item.title.toLowerCase().includes(q) ||
         item.excerpt.toLowerCase().includes(q) ||
         item.content.toLowerCase().includes(q) ||
-        item.author.toLowerCase().includes(q)
+        item.category.toLowerCase().includes(q)
     );
     setSuggestions(filtered);
   }, [searchQuery]);
@@ -85,12 +83,12 @@ const Header = () => {
     >
       <div className="container-custom mx-auto px-4 md:px-8">
         <div className="flex items-center justify-between h-20">
-          {/* Logo - Dynamic based on header state */}
+          {/* Logo - Scroll'da değişir */}
           <Link to="/" className="flex items-center gap-3">
             <img
-              src={isScrolled ? logoMark : logoFull}
+              src={isScrolled ? "/logo-dark.svg" : "/logo.svg"}
               alt="SPOLDER Logo"
-              className={`w-auto transition-all duration-300 ${isScrolled ? "h-14" : "h-11"}`}
+              className="h-10 w-auto transition-all duration-300"
             />
           </Link>
 
