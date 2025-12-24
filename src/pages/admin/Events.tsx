@@ -97,11 +97,17 @@ const AdminEvents = () => {
 
   const fetchEvents = async () => {
     try {
-      const storedEvents = localStorage.getItem('spolder_events');
-      const eventsData = storedEvents ? JSON.parse(storedEvents) : [];
-      setEvents(eventsData);
+      setLoading(true);
+      const { data, error } = await supabase
+        .from('events')
+        .select('*')
+        .order('created_at', { ascending: false });
+      
+      if (error) throw error;
+      setEvents(data || []);
     } catch (error) {
       console.error("Error fetching events:", error);
+      toast.error("Etkinlikler yüklenirken hata oluştu");
     } finally {
       setLoading(false);
     }
@@ -144,31 +150,35 @@ const AdminEvents = () => {
         imageUrl = await uploadImage();
       }
 
-      // Slug oluştur (eğer yoksa)
+      // Slug oluştur
       const slug = formData.slug || formData.title.toLowerCase()
         .replace(/ğ/g, 'g').replace(/ü/g, 'u').replace(/ş/g, 's')
         .replace(/ı/g, 'i').replace(/ö/g, 'o').replace(/ç/g, 'c')
         .replace(/[^a-z0-9]+/g, '-').replace(/^-+|-+$/g, '');
 
       const dataToSave = { ...formData, image: imageUrl, slug };
-      const storedEvents = localStorage.getItem('spolder_events');
-      const eventsData = storedEvents ? JSON.parse(storedEvents) : [];
 
       if (editingEvent) {
-        const index = eventsData.findIndex((e: Event) => e.id === editingEvent.id);
-        if (index !== -1) {
-          eventsData[index] = { ...dataToSave, id: editingEvent.id };
-          logActivity('update', 'event', formData.title);
-          toast.success(`"${formData.title}" başarıyla güncellendi!`);
-        }
+        // Update existing event
+        const { error } = await supabase
+          .from('events')
+          .update(dataToSave)
+          .eq('id', editingEvent.id);
+        
+        if (error) throw error;
+        logActivity('update', 'event', formData.title);
+        toast.success(`"${formData.title}" başarıyla güncellendi!`);
       } else {
-        const newEvent = { ...dataToSave, id: Date.now() };
-        eventsData.unshift(newEvent);
+        // Create new event
+        const { error } = await supabase
+          .from('events')
+          .insert([dataToSave]);
+        
+        if (error) throw error;
         logActivity('create', 'event', formData.title);
         toast.success(`"${formData.title}" başarıyla oluşturuldu!`);
       }
 
-      localStorage.setItem('spolder_events', JSON.stringify(eventsData));
       resetForm();
       fetchEvents();
     } catch (error: any) {
@@ -212,11 +222,18 @@ const AdminEvents = () => {
     if (!confirm("Bu etkinliği silmek istediğinizden emin misiniz?")) return;
 
     try {
-      const storedEvents = localStorage.getItem('spolder_events');
-      const eventsData = storedEvents ? JSON.parse(storedEvents) : [];
-      const event = eventsData.find((e: Event) => e.id === id);
-      const filtered = eventsData.filter((e: Event) => e.id !== id);
-      localStorage.setItem('spolder_events', JSON.stringify(filtered));
+      const { data: event } = await supabase
+        .from('events')
+        .select('*')
+        .eq('id', id)
+        .single();
+
+      const { error: deleteError } = await supabase
+        .from('events')
+        .delete()
+        .eq('id', id);
+      
+      if (deleteError) throw deleteError;
       
       if (event) {
         logActivity('delete', 'event', event.title);

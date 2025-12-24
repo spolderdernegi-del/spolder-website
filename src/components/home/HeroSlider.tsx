@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ChevronLeft, ChevronRight, Calendar } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { supabase } from "@/integrations/supabase/client";
 
 interface SlideEvent {
   id: number;
@@ -13,63 +14,37 @@ interface SlideEvent {
   showInSlider?: boolean;
 }
 
-const defaultSlides = [
-  {
-    id: 1,
-    title: "Spor Ekonomisi Raporu 2024 Yayınlandı",
-    excerpt: "Türkiye'nin spor ekonomisine ilişkin kapsamlı raporumuz kamuoyuyla paylaşıldı. Raporda spor sektörünün GSYH'ye katkısı analiz edildi.",
-    image: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=1200&auto=format&fit=crop&q=80",
-    date: "12 Aralık 2024",
-    category: "Araştırma",
-    showInSlider: false,
-  },
-  {
-    id: 2,
-    title: "Yerel Yönetimler ve Spor Forumu Gerçekleşti",
-    excerpt: "Belediyelerin spor politikalarını ele aldığımız forum büyük ilgi gördü. 50'den fazla belediye temsilcisi katıldı.",
-    image: "https://images.unsplash.com/photo-1431324155629-1a6deb1dec8d?w=1200&auto=format&fit=crop&q=80",
-    date: "8 Aralık 2024",
-    category: "Etkinlik",
-    showInSlider: false,
-  },
-  {
-    id: 3,
-    title: "Avrupa Spor Şartı Türkçe'ye Çevrildi",
-    excerpt: "Avrupa Konseyi'nin yeni Spor Şartı'nın Türkçe çevirisi derneğimiz tarafından tamamlandı.",
-    image: "https://images.unsplash.com/photo-1517649763962-0c623066013b?w=1200&auto=format&fit=crop&q=80",
-    date: "5 Aralık 2024",
-    category: "Yayın",
-    showInSlider: false,
-  },
-];
-
 const HeroSlider = () => {
   const [currentSlide, setCurrentSlide] = useState(0);
   const [slides, setSlides] = useState<SlideEvent[]>([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // localStorage'dan etkinlikleri yükle ve filtreleme yap
-    try {
-      const storedEvents = localStorage.getItem('spolder_events');
-      if (storedEvents) {
-        const events = JSON.parse(storedEvents);
-        const sliderEvents = events.filter((e: SlideEvent) => e.showInSlider === true);
+    // Supabase'den slider etkinliklerini yükle
+    const fetchSliderEvents = async () => {
+      try {
+        const { data, error } = await supabase
+          .from('events')
+          .select('id, title, excerpt, image, date, category, showInSlider')
+          .eq('showInSlider', true)
+          .eq('publishStatus', 'published')
+          .order('created_at', { ascending: false });
         
-        // Admin panelinden slider etkinlikleri varsa kullan
-        if (sliderEvents.length > 0) {
-          setSlides(sliderEvents);
-        } else {
-          // Slider etkinliği yoksa boş bırak (empty state gösterilecek)
+        if (error) {
+          console.error("Error fetching slider events:", error);
           setSlides([]);
+        } else {
+          setSlides(data || []);
         }
-      } else {
-        // localStorage boş ise boş bırak
+      } catch (error) {
+        console.error("Error loading slider events:", error);
         setSlides([]);
+      } finally {
+        setLoading(false);
       }
-    } catch (error) {
-      console.error("Error loading slider events:", error);
-      setSlides([]);
-    }
+    };
+
+    fetchSliderEvents();
   }, []);
 
   useEffect(() => {
