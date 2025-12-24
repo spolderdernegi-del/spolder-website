@@ -253,4 +253,4 @@ const Yayinlar = () => {
   );
 };
 
-export default Yayinlar;export default Yayinlar;
+export default Yayinlar;
