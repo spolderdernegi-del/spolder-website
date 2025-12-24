@@ -2,35 +2,16 @@
 import { Button } from "@/components/ui/button";
 import erkekLogo from "@/assets/logo_erkek_tek.webp";
 import disiLogo from "@/assets/logo_disi.webp";
-import { useEffect, useRef, useState } from "react";
+import { useRef } from "react";
 
-const rgbToHex = (rgb: string) => {
-  // Expect formats like: "rgb(r, g, b)" or "rgba(r, g, b, a)"
-  const match = rgb.match(/rgba?\((\d+)\s*,\s*(\d+)\s*,\s*(\d+)(?:\s*,\s*([\d.]+))?\)/i);
-  if (!match) return "";
-  const r = Math.max(0, Math.min(255, parseInt(match[1], 10)));
-  const g = Math.max(0, Math.min(255, parseInt(match[2], 10)));
-  const b = Math.max(0, Math.min(255, parseInt(match[3], 10)));
-  const toHex = (n: number) => n.toString(16).padStart(2, "0");
-  return `#${toHex(r)}${toHex(g)}${toHex(b)}`.toUpperCase();
-};
-
-const ColorSwatch = ({ name, className }: { name: string; className: string }) => {
+const ColorSwatch = ({ name, className, hex }: { name: string; className: string; hex: string }) => {
   const ref = useRef<HTMLDivElement>(null);
-  const [hex, setHex] = useState<string>("");
-
-  useEffect(() => {
-    if (!ref.current) return;
-    const bg = getComputedStyle(ref.current).backgroundColor;
-    const asHex = rgbToHex(bg);
-    if (asHex) setHex(asHex);
-  }, []);
 
   return (
     <div className="flex items-center gap-3">
       <div ref={ref} className={`h-10 w-10 rounded ${className}`} />
       <span className="text-sm text-muted-foreground">
-        {name} {hex && ` ${hex}`}
+        {name} <strong>{hex}</strong>
       </span>
     </div>
   );
@@ -79,10 +60,10 @@ export default function CorporateIdentitySection() {
             <CardTitle>Renk Paleti</CardTitle>
           </CardHeader>
           <CardContent className="grid grid-cols-2 gap-4">
-            <ColorSwatch name="Primary" className="bg-primary" />
-            <ColorSwatch name="Secondary" className="bg-secondary" />
-            <ColorSwatch name="Foreground" className="bg-foreground" />
-            <ColorSwatch name="Background" className="bg-background" />
+            <ColorSwatch name="Primary" className="bg-primary" hex="#2FAC66" />
+            <ColorSwatch name="Secondary" className="bg-secondary" hex="#2DAAE2" />
+            <ColorSwatch name="Foreground" className="bg-foreground" hex="#1F1F1F" />
+            <ColorSwatch name="Background" className="bg-background" hex="#F7F7F7" />
           </CardContent>
         </Card>
       </div>
