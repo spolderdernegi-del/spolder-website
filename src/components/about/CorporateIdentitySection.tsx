@@ -38,7 +38,7 @@ const ColorSwatch = ({ name, className }: { name: string; className: string }) =
 
 export default function CorporateIdentitySection() {
   return (
-    <div className="space-y-8">
+    <div className="space-y-8" id="kurumsal-kimlik">
       <div className="text-center">
         <h2 className="font-display text-3xl md:text-4xl font-bold">Kurumsal Kimlik</h2>
         <p className="mt-2 text-muted-foreground">Logo kullanım kılavuzu, renk paleti ve tipografi.</p>

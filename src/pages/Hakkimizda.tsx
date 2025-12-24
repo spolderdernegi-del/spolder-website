@@ -41,6 +41,42 @@ const boardMembers = [
 
 const Hakkimizda = () => {
   const [selectedMember, setSelectedMember] = React.useState<any | null>(null);
+
+  // SEO meta tags
+  React.useEffect(() => {
+    document.title = "Hakkımızda - SPOLDER Spor Politikaları Derneği";
+    
+    const setMetaTag = (name: string, content: string) => {
+      let meta = document.querySelector(`meta[name="${name}"]`) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.name = name;
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    const setPropertyTag = (property: string, content: string) => {
+      let meta = document.querySelector(`meta[property="${property}"]`) as HTMLMetaElement | null;
+      if (!meta) {
+        meta = document.createElement("meta");
+        meta.setAttribute("property", property);
+        document.head.appendChild(meta);
+      }
+      meta.content = content;
+    };
+
+    setMetaTag("description", "SPOLDER Spor Politikaları Derneği hakkında detaylı bilgi, yönetim kurulu, misyon, vizyon ve kurumsal kimlik. Logo tasarımı, vektörel logo dosyaları, renk paleti ve marka rehberi.");
+    setMetaTag("keywords", "SPOLDER hakkında, spor derneği, yönetim kurulu, kurumsal kimlik, logo, vektör logo, renk paleti, marka, spor politikaları derneği");
+    setPropertyTag("og:title", "Hakkımızda - SPOLDER Spor Politikaları Derneği");
+    setPropertyTag("og:description", "SPOLDER'in misyon, vizyon, değerleri ve kurumsal kimlik sistemi hakkında bilgi alın.");
+    setPropertyTag("og:url", "https://spolder-website-final.vercel.app/hakkimizda");
+
+    return () => {
+      // Cleanup optional - sayfadan çıkışta varsayılan meta'ya dönmek istemiyoruz
+    };
+  }, []);
+
   return (
     <div className="min-h-screen flex flex-col">
       <Header />

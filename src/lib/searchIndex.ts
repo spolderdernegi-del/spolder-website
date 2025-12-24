@@ -235,6 +235,18 @@ export const allContent = [
     category: "Gençlik",
     link: "/blog/6",
   },
+  // Kurumsal Kimlik
+  {
+    id: "corporate-identity",
+    type: "Kurumsal",
+    title: "SPOLDER Kurumsal Kimlik - Logo ve Renk Paleti",
+    excerpt: "SPOLDER'in resmi logo tasarımı, vektörel logo dosyaları, renk paleti ve marka kullanım kılavuzu.",
+    content: "SPOLDER Spor Politikaları Derneği'nin resmi kurumsal kimlik sistemi. Vektörel logo dosyaları, logo kullanım kılavuzu, renk paleti (Yeşil, Turkuaz, Ön Plan, Arka Plan) ve marka rehberi. Indirilebilir AI vektör ve PDF dosyaları. SPOLDER logo vektörel ai pdf renk paleti marka kimlik tasarım vektör grafik",
+    author: "SPOLDER",
+    image: null,
+    category: "Marka",
+    link: "/hakkimizda#kurumsal-kimlik",
+  },
 ];
 
 // Arama fonksiyonu - Önce başlık, sonra içerik
