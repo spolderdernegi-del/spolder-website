@@ -10,19 +10,19 @@ import { logActivity } from "@/lib/activityLog";
 
 interface News {
   id: number;
-  title: string;
-  excerpt: string;
-  content: string;
-  image: string;
-  category: string;
-  author: string;
-  date: string;
+  baslik: string;
+  ozet: string;
+  icerik: string;
+  gorsel: string;
+  kategori: string;
+  yazar: string;
+  tarih: string;
   created_at: string;
-  publishStatus?: 'draft' | 'published';
+  yayin_durumu?: 'taslak' | 'yayinlandi';
   slug?: string;
-  metaTitle?: string;
-  metaDescription?: string;
-  showInSlider?: boolean;
+  meta_baslik?: string;
+  meta_aciklama?: string;
+  sliderda_goster?: boolean;
 }
 
 const AdminNews = () => {
@@ -40,18 +40,18 @@ const AdminNews = () => {
   const [filterStatus, setFilterStatus] = useState("");
   const [selectedNews, setSelectedNews] = useState<number[]>([]);
   const [formData, setFormData] = useState({
-    title: "",
-    excerpt: "",
-    content: "",
-    image: "",
-    category: "",
-    author: "",
-    date: "",
-    publishStatus: 'draft' as 'draft' | 'published',
+    baslik: "",
+    ozet: "",
+    icerik: "",
+    gorsel: "",
+    kategori: "",
+    yazar: "",
+    tarih: "",
+    yayin_durumu: 'taslak' as 'taslak' | 'yayinlandi',
     slug: "",
-    showInSlider: false,
-    metaTitle: "",
-    metaDescription: "",
+    sliderda_goster: false,
+    meta_baslik: "",
+    meta_aciklama: "",
   });
 
   useEffect(() => {
@@ -121,7 +121,7 @@ const AdminNews = () => {
   };
 
   const uploadImage = async (): Promise<string> => {
-    if (!imageFile) return formData.image;
+    if (!imageFile) return formData.gorsel;
 
     setUploading(true);
     try {
@@ -140,13 +140,13 @@ const AdminNews = () => {
     setLoading(true);
 
     try {
-      let imageUrl = formData.image;
+      let imageUrl = formData.gorsel;
       if (imageFile) {
         imageUrl = await uploadImage();
       }
 
       // Slug oluştur
-      const slug = formData.slug || formData.title
+      const slug = formData.slug || formData.baslik
         .toLowerCase()
         .replace(/ğ/g, 'g')
         .replace(/ü/g, 'u')
@@ -159,9 +159,9 @@ const AdminNews = () => {
 
       const dataToSave = { 
         ...formData, 
-        image: imageUrl,
+        gorsel: imageUrl,
         slug,
-        publishStatus: formData.publishStatus || 'draft'
+        yayin_durumu: formData.yayin_durumu || 'taslak'
       };
 
       if (editingNews) {
@@ -175,7 +175,7 @@ const AdminNews = () => {
           throw error;
         }
         
-        logActivity('update', 'news', formData.title);
+        logActivity('update', 'news', formData.baslik);
         toast.success('Haber güncellendi!');
       } else {
         // Yeni haber ekle
@@ -187,7 +187,7 @@ const AdminNews = () => {
           throw error;
         }
         
-        logActivity('create', 'news', formData.title);
+        logActivity('create', 'news', formData.baslik);
         toast.success('Haber eklendi!');
       }
 
@@ -203,20 +203,20 @@ const AdminNews = () => {
   const handleEdit = (newsItem: News) => {
     setEditingNews(newsItem);
     setFormData({
-      title: newsItem.title,
-      excerpt: newsItem.excerpt,
-      content: newsItem.content,
-      image: newsItem.image,
-      category: newsItem.category,
-      author: newsItem.author,
-      date: newsItem.date,
-      publishStatus: newsItem.publishStatus || 'draft',
+      baslik: newsItem.baslik,
+      ozet: newsItem.ozet,
+      icerik: newsItem.icerik,
+      gorsel: newsItem.gorsel,
+      kategori: newsItem.kategori,
+      yazar: newsItem.yazar,
+      tarih: newsItem.tarih,
+      yayin_durumu: newsItem.yayin_durumu || 'taslak',
       slug: newsItem.slug || '',
-      metaTitle: newsItem.metaTitle || '',
-      metaDescription: newsItem.metaDescription || '',
-      showInSlider: newsItem.showInSlider || false,
+      meta_baslik: newsItem.meta_baslik || '',
+      meta_aciklama: newsItem.meta_aciklama || '',
+      sliderda_goster: newsItem.sliderda_goster || false,
     });
-    setImagePreview(newsItem.image || "");
+    setImagePreview(newsItem.gorsel || "");
     setImageFile(null);
     setShowForm(true);
   };
@@ -235,7 +235,7 @@ const AdminNews = () => {
         throw error;
       }
       
-      logActivity('delete', 'news', newsItem?.title || 'Haber');
+      logActivity('delete', 'news', newsItem?.baslik || 'Haber');
       toast.success('Haber silindi!');
       fetchNews();
     } catch (error: any) {
@@ -271,22 +271,22 @@ const AdminNews = () => {
     }
   };
 
-  const togglePublishStatus = async (id: number, currentStatus?: 'draft' | 'published') => {
+  const togglePublishStatus = async (id: number, currentStatus?: 'taslak' | 'yayinlandi') => {
     try {
-      const newStatus = currentStatus === 'published' ? 'draft' : 'published';
+      const newStatus = currentStatus === 'yayinlandi' ? 'taslak' : 'yayinlandi';
       const newsItem = news.find(n => n.id === id);
       
       const { error } = await supabase
         .from('news')
-        .update({ publishStatus: newStatus })
+        .update({ yayin_durumu: newStatus })
         .eq('id', id);
       
       if (error) {
         throw error;
       }
       
-      logActivity(newStatus === 'published' ? 'publish' : 'unpublish', 'news', newsItem?.title || 'Haber');
-      toast.success(newStatus === 'published' ? 'Haber yayınlandı!' : 'Haber taslağa alındı!');
+      logActivity(newStatus === 'yayinlandi' ? 'publish' : 'unpublish', 'news', newsItem?.baslik || 'Haber');
+      toast.success(newStatus === 'yayinlandi' ? 'Haber yayınlandı!' : 'Haber taslağa alındı!');
       fetchNews();
     } catch (error: any) {
       toast.error("Hata: " + error.message);
@@ -294,10 +294,10 @@ const AdminNews = () => {
   };
 
   const filteredNews = news.filter(item => {
-    const matchesSearch = item.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         item.excerpt.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesCategory = !filterCategory || item.category === filterCategory;
-    const matchesStatus = !filterStatus || item.publishStatus === filterStatus;
+    const matchesSearch = item.baslik.toLowerCase().includes(searchTerm.toLowerCase()) ||
+                         item.ozet.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesCategory = !filterCategory || item.kategori === filterCategory;
+    const matchesStatus = !filterStatus || item.yayin_durumu === filterStatus;
     return matchesSearch && matchesCategory && matchesStatus;
   });
 
@@ -307,18 +307,18 @@ const AdminNews = () => {
     setImageFile(null);
     setImagePreview("");
     setFormData({
-      title: "",
-      excerpt: "",
-      content: "",
-      image: "",
-      category: "",
-      author: "",
-      date: "",
-      publishStatus: 'draft',
+      baslik: "",
+      ozet: "",
+      icerik: "",
+      gorsel: "",
+      kategori: "",
+      yazar: "",
+      tarih: "",
+      yayin_durumu: 'taslak',
       slug: "",
-      metaTitle: "",
-      metaDescription: "",
-      showInSlider: false,
+      meta_baslik: "",
+      meta_aciklama: "",
+      sliderda_goster: false,
     });
   };
 
@@ -360,16 +360,16 @@ const AdminNews = () => {
                   <label className="block text-sm font-medium text-foreground mb-2">Başlık *</label>
                   <Input
                     required
-                    value={formData.title}
-                    onChange={(e) => setFormData({ ...formData, title: e.target.value })}
+                    value={formData.baslik}
+                    onChange={(e) => setFormData({ ...formData, baslik: e.target.value })}
                   />
                 </div>
 
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Kategori</label>
                   <select
-                    value={formData.category}
-                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    value={formData.kategori}
+                    onChange={(e) => setFormData({ ...formData, kategori: e.target.value })}
                     className="w-full p-2 border rounded-md"
                   >
                     <option value="">Kategori seçin...</option>
@@ -382,8 +382,8 @@ const AdminNews = () => {
                 <div>
                   <label className="block text-sm font-medium text-foreground mb-2">Yazar</label>
                   <Input
-                    value={formData.author}
-                    onChange={(e) => setFormData({ ...formData, author: e.target.value })}
+                    value={formData.yazar}
+                    onChange={(e) => setFormData({ ...formData, yazar: e.target.value })}
                     placeholder="SPOLDER"
                   />
                 </div>
@@ -392,8 +392,8 @@ const AdminNews = () => {
                   <label className="block text-sm font-medium text-foreground mb-2">Tarih</label>
                   <Input
                     type="date"
-                    value={formData.date}
-                    onChange={(e) => setFormData({ ...formData, date: e.target.value })}
+                    value={formData.tarih}
+                    onChange={(e) => setFormData({ ...formData, tarih: e.target.value })}
                   />
                 </div>
 
@@ -425,8 +425,8 @@ const AdminNews = () => {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">İçerik</label>
                 <Textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  value={formData.icerik}
+                  onChange={(e) => setFormData({ ...formData, icerik: e.target.value })}
                   rows={10}
                 />
               </div>
@@ -455,13 +455,13 @@ const AdminNews = () => {
                       <span className="text-xs text-muted-foreground ml-2">(Google'da görünecek başlık)</span>
                     </label>
                     <Input
-                      value={formData.metaTitle}
-                      onChange={(e) => setFormData({ ...formData, metaTitle: e.target.value })}
-                      placeholder={formData.title || "Haber başlığı buraya"}
+                      value={formData.meta_baslik}
+                      onChange={(e) => setFormData({ ...formData, meta_baslik: e.target.value })}
+                      placeholder={formData.baslik || "Haber başlığı buraya"}
                       maxLength={60}
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      {formData.metaTitle?.length || 0}/60 karakter
+                      {formData.meta_baslik?.length || 0}/60 karakter
                     </p>
                   </div>
 
@@ -471,14 +471,14 @@ const AdminNews = () => {
                       <span className="text-xs text-muted-foreground ml-2">(Google'da görünecek açıklama)</span>
                     </label>
                     <Textarea
-                      value={formData.metaDescription}
-                      onChange={(e) => setFormData({ ...formData, metaDescription: e.target.value })}
-                      placeholder={formData.excerpt || "Haber hakkında kısa açıklama"}
+                      value={formData.meta_aciklama}
+                      onChange={(e) => setFormData({ ...formData, meta_aciklama: e.target.value })}
+                      placeholder={formData.ozet || "Haber hakkında kısa açıklama"}
                       rows={2}
                       maxLength={160}
                     />
                     <p className="text-xs text-muted-foreground mt-1">
-                      {formData.metaDescription?.length || 0}/160 karakter
+                      {formData.meta_aciklama?.length || 0}/160 karakter
                     </p>
                   </div>
                 </div>
@@ -487,21 +487,21 @@ const AdminNews = () => {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">Yayın Durumu</label>
                 <select
-                  value={formData.publishStatus}
-                  onChange={(e) => setFormData({ ...formData, publishStatus: e.target.value as 'draft' | 'published' })}
+                  value={formData.yayin_durumu}
+                  onChange={(e) => setFormData({ ...formData, yayin_durumu: e.target.value as 'taslak' | 'yayinlandi' })}
                   className="w-full p-2 border border-slate-200 dark:border-slate-800 rounded-md bg-white dark:bg-slate-950 text-foreground"
                 >
-                  <option value="draft">Taslak</option>
-                  <option value="published">Yayınla</option>
+                  <option value="taslak">Taslak</option>
+                  <option value="yayinlandi">Yayınla</option>
                 </select>
               </div>
 
               <div className="flex items-center gap-2">
                 <input
                   type="checkbox"
-                  id="showInSlider"
-                  checked={formData.showInSlider}
-                  onChange={(e) => setFormData({ ...formData, showInSlider: e.target.checked })}
+                  id="sliderda_goster"
+                  checked={formData.sliderda_goster}
+                  onChange={(e) => setFormData({ ...formData, sliderda_goster: e.target.checked })}
                   className="w-4 h-4 rounded border-slate-300 dark:border-slate-700"
                 />
                 <label htmlFor="showInSlider" className="text-sm font-medium text-foreground cursor-pointer">
@@ -513,8 +513,8 @@ const AdminNews = () => {
               <div>
                 <label className="block text-sm font-medium text-foreground mb-2">İçerik</label>
                 <Textarea
-                  value={formData.content}
-                  onChange={(e) => setFormData({ ...formData, content: e.target.value })}
+                  value={formData.icerik}
+                  onChange={(e) => setFormData({ ...formData, icerik: e.target.value })}
                   rows={8}
                 />
               </div>
@@ -542,23 +542,23 @@ const AdminNews = () => {
                   />
                 )}
                 <h2 className="text-2xl font-bold text-foreground mb-2">
-                  {formData.title || "Haber Başlığı"}
+                  {formData.baslik || "Haber Başlığı"}
                 </h2>
-                {formData.category && (
+                {formData.kategori && (
                   <span className="inline-block px-3 py-1 bg-primary/10 text-primary text-sm rounded-full mb-3">
-                    {formData.category}
+                    {formData.kategori}
                   </span>
                 )}
                 <div className="flex flex-wrap gap-4 text-sm text-muted-foreground mb-4">
-                  {formData.date && <span>📅 {formData.date}</span>}
-                  {formData.author && <span>✍️ {formData.author}</span>}
+                  {formData.tarih && <span>📅 {formData.tarih}</span>}
+                  {formData.yazar && <span>✍️ {formData.yazar}</span>}
                 </div>
                 <p className="text-muted-foreground mb-4 font-medium">
-                  {formData.excerpt || "Haber özeti burada görünecek..."}
+                  {formData.ozet || "Haber özeti burada görünecek..."}
                 </p>
                 <div className="prose prose-sm dark:prose-invert max-w-none">
-                  {formData.content ? (
-                    <div style={{ whiteSpace: 'pre-wrap' }}>{formData.content}</div>
+                  {formData.icerik ? (
+                    <div style={{ whiteSpace: 'pre-wrap' }}>{formData.icerik}</div>
                   ) : (
                     <p className="text-muted-foreground italic">Haber içeriği burada görünecek...</p>
                   )}
@@ -597,8 +597,8 @@ const AdminNews = () => {
                 className="px-3 py-2 border border-slate-200 dark:border-slate-800 rounded-md bg-white dark:bg-slate-950 text-foreground"
               >
                 <option value="">Tüm Durumlar</option>
-                <option value="draft">Taslak</option>
-                <option value="published">Yayınlanmış</option>
+                <option value="taslak">Taslak</option>
+                <option value="yayinlandi">Yayınlanmış</option>
               </select>
             </div>
             {selectedNews.length > 0 && (
@@ -642,17 +642,17 @@ const AdminNews = () => {
                     className="mt-1.5 w-5 h-5 cursor-pointer"
                   />
                   <div className="flex gap-4 flex-1">
-                    {newsItem.image && (
+                    {newsItem.gorsel && (
                       <img 
-                        src={newsItem.image} 
-                        alt={newsItem.title}
+                        src={newsItem.gorsel} 
+                        alt={newsItem.baslik}
                         className="w-24 h-24 object-cover rounded"
                       />
                     )}
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-1">
-                        <h3 className="text-lg font-semibold text-foreground">{newsItem.title}</h3>
-                        {newsItem.publishStatus === 'draft' ? (
+                        <h3 className="text-lg font-semibold text-foreground">{newsItem.baslik}</h3>
+                        {newsItem.yayin_durumu === 'taslak' ? (
                           <span className="px-2 py-0.5 text-xs font-medium bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200 rounded">
                             Taslak
                           </span>
@@ -662,13 +662,13 @@ const AdminNews = () => {
                           </span>
                         )}
                       </div>
-                      <p className="text-sm text-muted-foreground mb-2">{newsItem.excerpt}</p>
+                      <p className="text-sm text-muted-foreground mb-2">{newsItem.ozet}</p>
                       <div className="flex flex-wrap gap-2 text-xs text-muted-foreground">
-                        <span>📅 {newsItem.date}</span>
-                        <span>✍️ {newsItem.author}</span>
-                        {newsItem.category && (
+                        <span>📅 {newsItem.tarih}</span>
+                        <span>✍️ {newsItem.yazar}</span>
+                        {newsItem.kategori && (
                           <span className="px-2 py-0.5 bg-primary/10 text-primary rounded">
-                            {newsItem.category}
+                            {newsItem.kategori}
                           </span>
                         )}
                       </div>
@@ -677,11 +677,11 @@ const AdminNews = () => {
                   <div className="flex gap-2 ml-4 flex-shrink-0">
                     <Button
                       size="sm"
-                      variant={newsItem.publishStatus === 'published' ? 'default' : 'outline'}
-                      onClick={() => togglePublishStatus(newsItem.id, newsItem.publishStatus)}
-                      title={newsItem.publishStatus === 'published' ? 'Taslağa Al' : 'Yayınla'}
+                      variant={newsItem.yayin_durumu === 'yayinlandi' ? 'default' : 'outline'}
+                      onClick={() => togglePublishStatus(newsItem.id, newsItem.yayin_durumu)}
+                      title={newsItem.yayin_durumu === 'yayinlandi' ? 'Taslağa Al' : 'Yayınla'}
                     >
-                      {newsItem.publishStatus === 'published' ? '👁️' : '📝'}
+                      {newsItem.yayin_durumu === 'yayinlandi' ? '👁️' : '📝'}
                     </Button>
                     <Button
                       size="sm"
